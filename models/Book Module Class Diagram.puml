@@ -1,0 +1,49 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class Book {
+   id: UUID
+   publicationDate: LocalDate
+   title: String
+   publisher: String
+   author: String
+}
+
+interface JpaRepository << Book, UUID >> {
+  + save(T): T
+  + findAll(): List<T>
+  + count(): long
+}
+
+interface BookRepository << interface >> extends JpaRepository{
+  + findByAuthorContaining(String): List<Book>
+  + findByTitleContainsAndPublicationDateIsNull(String): List<Book>
+  + findByPublicationDateIsNull(): List<Book>
+  + findByTitleContainsAndPublicationDateAfter(String, LocalDate): List<Book>
+  + findByTitleContains(String): List<Book>
+}
+class BookService {
+  + createBook(Book): Book
+  + readUnpublishedBooksByTitle(String): List<Book>
+  + count(): long
+  + readUnpublishedBooks(): List<Book>
+}
+
+class VerticalLayout{
+    add(Component...): void
+}
+
+class BookView extends VerticalLayout{
+  - showFilteredData(): void
+  - buildUI(): void
+}
+
+BookRepository  -[#595959,dashed]->  Book           
+BookService     -[#595959,dashed]->  Book           
+BookService    "1" *-[#595959,plain]-> "bookRepository\n1" BookRepository 
+BookView        -[#595959,dashed]->  Book           
+BookView       "1" *-[#595959,plain]-> "bookService\n1" BookService    
+@enduml
