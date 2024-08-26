@@ -16,7 +16,7 @@
         <java.version>17</java.version>
         <cucumber.version>7.14.0</cucumber.version>
         <vaadin.version>24.2.2</vaadin.version>
-        <sonar.organization>ruizrube</sonar.organization>
+        <sonar.organization>pdanielfg</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
@@ -158,7 +158,7 @@
         <repository>
             <id>github</id>
             <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/ruizrube/iw-fullstack</url>
+            <url>https://maven.pkg.github.com/PDanielFG/iwGymSept</url>
         </repository>
     </distributionManagement>
 
