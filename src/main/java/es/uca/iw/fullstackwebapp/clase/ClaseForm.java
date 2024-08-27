@@ -18,6 +18,7 @@ import es.uca.iw.fullstackwebapp.user.domain.User;
 import com.vaadin.flow.component.notification.Notification;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 
@@ -78,16 +79,36 @@ public class ClaseForm extends FormLayout{
                 // Manejo del valor de horario, habia usado Datepicker por error en vez de DateTimePicker
                 LocalDateTime selectedHorario = horario.getValue();
                 if (selectedHorario != null) {
+                    // Verifica si la fecha y hora seleccionada es menor que la actual
+                    if (selectedHorario.isBefore(LocalDateTime.now())) {
+                        Notification.show("El horario no puede ser anterior a la fecha y hora actual.", 3000, Notification.Position.MIDDLE);
+                        return; // Salir del método si la fecha es inválida
+                    }
+
+                    // Verifica si la hora está dentro del rango permitido (8:00 AM a 11:00 PM)
+                    LocalTime startTime = LocalTime.of(8, 0);
+                    LocalTime endTime = LocalTime.of(23, 0);
+                    LocalTime selectedTime = selectedHorario.toLocalTime();
+
+                    if (selectedTime.isBefore(startTime) || selectedTime.isAfter(endTime)) {
+                        Notification.show("La hora debe estar entre las 8:00 AM y las 11:00 PM.", 3000, Notification.Position.MIDDLE);
+                        return; // Salir del método si la hora no está en el rango permitido
+                    }
+
                     clase.setHorario(selectedHorario);
                 } else {
                     // Manejar el caso en que no se selecciona ninguna fecha y hora
-                    // Por ejemplo, podrías lanzar una excepción o establecer un valor por defecto
-                    throw new IllegalArgumentException("El campo 'Horario' no puede estar vacío.");
+                    Notification.show("El campo 'Horario' es obligatorio.", 3000, Notification.Position.MIDDLE);
+                    return; // Salir del método si el horario no es válido
                 }
 
                 // Manejo del valor de capacidad
                 try {
                     int capacidadValue = Integer.parseInt(capacidad.getValue());
+                    if (capacidadValue < 5) {
+                        Notification.show("La capacidad mínima de la clase es de 5 personas.", 3000, Notification.Position.MIDDLE);
+                        return; // Salir del método si la capacidad es menor a 5
+                    }
                     clase.setCapacidad(capacidadValue);
                 } catch (NumberFormatException e) {
                     Notification.show("La capacidad debe ser un número entero válido.", 3000, Notification.Position.MIDDLE);
