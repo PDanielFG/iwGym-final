@@ -72,7 +72,7 @@ public class ClaseForm extends FormLayout{
             if (principal instanceof User) {
                 User currentUser = (User) principal;
 
-                // Asignar los valores del formulario al objeto allegado
+                // Asignar los valores del formulario al objeto
                 clase.setName(name.getValue());
                 clase.setDescription(description.getValue());
 

@@ -21,6 +21,7 @@ import es.uca.iw.fullstackwebapp.user.security.AuthenticatedUser;
 import es.uca.iw.fullstackwebapp.user.views.UserHomeView;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 import es.uca.iw.fullstackwebapp.admin.AdminView;
+import es.uca.iw.fullstackwebapp.admin.InstructoresAdmin;
 
 
 import java.util.Optional;
@@ -80,6 +81,9 @@ public class MainLayout extends AppLayout {
         }
         if (accessChecker.hasAccess(AdminView.class)) {
             nav.addItem(new SideNavItem("ADMIN. Clases", ClasesAdmin.class, LineAwesomeIcon.USER_SHIELD_SOLID.create()));
+        }
+       if (accessChecker.hasAccess(AdminView.class)) {
+            nav.addItem(new SideNavItem("ADMIN. Instructores", InstructoresAdmin.class, LineAwesomeIcon.USER_SHIELD_SOLID.create()));
         }
 
         return nav;
