@@ -1,8 +1,12 @@
 package es.uca.iw.fullstackwebapp.clase;
 
+import es.uca.iw.fullstackwebapp.reserva.Reserva;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
+
 import es.uca.iw.fullstackwebapp.instructor.Instructor;
+import es.uca.iw.fullstackwebapp.user.domain.User;
 
 
 @Entity
@@ -18,6 +22,11 @@ public class Clase {
     @ManyToOne
     @JoinColumn(name = "clase_id")
     private Instructor instructor;
+
+    //la parte de manyToOne debe de llamarse el atributo igual que en oneToMany
+    //mappedby
+    @OneToMany(mappedBy = "clase", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reserva> reservas;
 
     public Clase() {
     }
