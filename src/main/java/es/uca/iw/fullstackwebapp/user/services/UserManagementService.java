@@ -23,12 +23,15 @@ public class UserManagementService implements UserDetailsService {
 
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+
 
     @Autowired
-    public UserManagementService(UserRepository repository, EmailService emailService, PasswordEncoder passwordEncoder) {
+    public UserManagementService(UserRepository repository, EmailService emailService, UserRepository userRepository ,PasswordEncoder passwordEncoder) {
         this.repository = repository;
         this.emailService = emailService;
         this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
     }
 
 
@@ -44,6 +47,11 @@ public class UserManagementService implements UserDetailsService {
         } catch (DataIntegrityViolationException e) {
             return false;
         }
+    }
+
+    public User findByUsername(String username) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        return userOptional.orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
     }
 
     @Override
@@ -91,4 +99,6 @@ public class UserManagementService implements UserDetailsService {
     public int count() {
         return (int) repository.count();
     }
+
+
 }

@@ -1,6 +1,7 @@
 package es.uca.iw.fullstackwebapp.user.domain;
 
 
+import es.uca.iw.fullstackwebapp.reserva.Reserva;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -38,6 +39,17 @@ public class User implements UserDetails {
     private String password;
 
     private boolean active;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reserva> reservas;
+
+    public List<Reserva> getReservas() {
+        return reservas;
+    }
+
+    public void setReservas(List<Reserva> reservas) {
+        this.reservas = reservas;
+    }
 
     @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.EAGER)

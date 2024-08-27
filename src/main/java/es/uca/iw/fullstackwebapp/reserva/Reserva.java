@@ -21,11 +21,18 @@ public class Reserva {
     @JoinColumn(name = "clase_id")
     private Clase clase;
 
-    // Relación con la entidad User
     @ManyToOne
+    @JoinColumn(name = "usuario_id")
     private User usuario;
 
-    // Getters y Setters
+    public Reserva(String username, Long id) {
+    }
+
+    public Reserva(User usuario, Clase clase) {
+        this.usuario = usuario;
+        this.clase = clase;
+        this.fechaReserva = LocalDateTime.now();    //fecha actual
+    }
 
     public Long getId() {
         return id;

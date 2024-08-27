@@ -2,7 +2,9 @@ package es.uca.iw.fullstackwebapp.user.views;
 
 import es.uca.iw.fullstackwebapp.MainLayout;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -11,7 +13,9 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import es.uca.iw.fullstackwebapp.clase.ClaseService;
+import es.uca.iw.fullstackwebapp.reserva.ReservaService;
 import jakarta.annotation.security.PermitAll;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
 import java.time.format.DateTimeFormatter;
@@ -31,10 +35,13 @@ public class ClasesListView extends VerticalLayout {
     TextField filterText = new TextField();
 
     private ClaseService service;
+    private ReservaService reservaService;
     private AuthenticatedUser authenticatedUser;
 
-    public ClasesListView(ClaseService service, AuthenticatedUser authenticatedUser) {
+    @Autowired
+    public ClasesListView(ClaseService service, ReservaService reservaService, AuthenticatedUser authenticatedUser) {
         this.service = service;
+        this.reservaService = reservaService;
         this.authenticatedUser = authenticatedUser;
         addClassName("list-view");
         setSizeFull();
@@ -48,6 +55,7 @@ public class ClasesListView extends VerticalLayout {
         grid.removeAllColumns();
         grid.addClassNames("clase-grid");
         grid.setSizeFull();
+
         grid.addColumn(Clase::getName).setHeader("Nombre");
         grid.addColumn(Clase::getDescription).setHeader("Descripción");
         grid.addColumn(clase -> {
@@ -64,6 +72,12 @@ public class ClasesListView extends VerticalLayout {
             Instructor instructor = clase.getInstructor();
             return instructor != null ? instructor.getName() + " " + instructor.getApellidos() : "";
         }).setHeader("Instructor");
+
+        grid.addComponentColumn(clase -> {
+            Button reserveButton = new Button("Reservar");
+            reserveButton.addClickListener(click -> reservarClase(clase));
+            return reserveButton;
+        }).setHeader("Acciones");
 
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
     }
@@ -94,5 +108,20 @@ public class ClasesListView extends VerticalLayout {
 
         // Actualizar el grid con las clases filtradas
         grid.setItems(clasesFiltradas);
+    }
+
+    private void reservarClase(Clase clase) {
+        // Obtener el usuario actual
+        String username = authenticatedUser.getUser().getUsername(); // Ajusta según tu implementación
+
+        try {
+            // Llamar al servicio de reserva para crear la reserva
+            reservaService.reserve(username, clase);
+            // Actualizar la vista o mostrar un mensaje de éxito
+            Notification.show("Clase reservada exitosamente");
+        } catch (Exception e) {
+            // Manejo de errores, mostrar mensaje de error
+            Notification.show("Error al reservar la clase: " + e.getMessage(), 3000, Notification.Position.BOTTOM_START);
+        }
     }
 }
