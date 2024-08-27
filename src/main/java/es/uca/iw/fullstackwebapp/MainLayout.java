@@ -13,6 +13,7 @@ import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.server.auth.AccessAnnotationChecker;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import es.uca.iw.fullstackwebapp.admin.ClasesAdmin;
 import es.uca.iw.fullstackwebapp.book.BookListView;
 import es.uca.iw.fullstackwebapp.book.BookManagementView;
 import es.uca.iw.fullstackwebapp.user.domain.User;
@@ -78,7 +79,7 @@ public class MainLayout extends AppLayout {
             nav.addItem(new SideNavItem("Book Management", BookManagementView.class, LineAwesomeIcon.BOOK_DEAD_SOLID.create()));
         }
         if (accessChecker.hasAccess(AdminView.class)) {
-            nav.addItem(new SideNavItem("Admin View", AdminView.class, LineAwesomeIcon.USER_SHIELD_SOLID.create()));
+            nav.addItem(new SideNavItem("ADMIN. Clases", ClasesAdmin.class, LineAwesomeIcon.USER_SHIELD_SOLID.create()));
         }
 
         return nav;

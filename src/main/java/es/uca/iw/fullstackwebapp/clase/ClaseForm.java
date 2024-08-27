@@ -1,0 +1,152 @@
+package es.uca.iw.fullstackwebapp.clase;
+
+import com.vaadin.flow.component.ComponentEvent;
+import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.data.binder.BeanValidationBinder;
+import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.shared.Registration;
+import es.uca.iw.fullstackwebapp.instructor.Instructor;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.button.ButtonVariant;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import es.uca.iw.fullstackwebapp.user.domain.User;
+import com.vaadin.flow.component.notification.Notification;
+
+import java.time.LocalDateTime;
+
+import com.vaadin.flow.component.datetimepicker.DateTimePicker;
+
+
+
+
+
+
+public class ClaseForm extends FormLayout{
+    Binder<Clase> binder = new BeanValidationBinder<>(Clase.class);
+
+    TextField name = new TextField("Name");
+    TextField description = new TextField("Description");
+    DateTimePicker horario = new DateTimePicker("Horario");
+    TextField capacidad = new TextField("Capacidad");
+    ComboBox<Instructor> instructor = new ComboBox<>("Instructor");
+    private Clase clase;
+
+    Button save = new Button("Save");
+    Button delete = new Button("Delete");
+    Button close = new Button("Cancel");
+
+    public ClaseForm(){
+        addClassName("clase-form");
+        binder.bindInstanceFields(this);
+        add(name, description, horario, capacidad, instructor, createButtonsLayout());
+    }
+
+    private HorizontalLayout createButtonsLayout() {
+        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+
+        save.addClickListener(click -> validateAndSave());
+        delete.addClickListener(click -> fireEvent(new DeleteEvent(this, clase)));
+        close.addClickListener(click -> fireEvent(new CloseEvent(this)));
+
+        return new HorizontalLayout(save, delete, close);
+    }
+
+    public void setClase(Clase clase) {
+        this.clase = clase;
+        binder.readBean(clase);
+    }
+
+    private void validateAndSave() {
+        // Obtener el usuario actual
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof User) {
+                User currentUser = (User) principal;
+
+                // Asignar los valores del formulario al objeto allegado
+                clase.setName(name.getValue());
+                clase.setDescription(description.getValue());
+
+                // Manejo del valor de horario, habia usado Datepicker por error en vez de DateTimePicker
+                LocalDateTime selectedHorario = horario.getValue();
+                if (selectedHorario != null) {
+                    clase.setHorario(selectedHorario);
+                } else {
+                    // Manejar el caso en que no se selecciona ninguna fecha y hora
+                    // Por ejemplo, podrías lanzar una excepción o establecer un valor por defecto
+                    throw new IllegalArgumentException("El campo 'Horario' no puede estar vacío.");
+                }
+
+                // Manejo del valor de capacidad
+                try {
+                    int capacidadValue = Integer.parseInt(capacidad.getValue());
+                    clase.setCapacidad(capacidadValue);
+                } catch (NumberFormatException e) {
+                    Notification.show("La capacidad debe ser un número entero válido.", 3000, Notification.Position.MIDDLE);
+                    return; // Salir del método si la capacidad no es válida
+                }
+                clase.setInstructor(instructor.getValue());
+                //allegado.setUser(currentUser); // Establecer el usuario actual
+
+                // Disparar el evento de guardar
+                fireEvent(new SaveEvent(this, clase));
+            }
+        }
+    }
+
+    public static abstract class ClaseFormEvent extends ComponentEvent<ClaseForm> {
+        private Clase clase;
+
+        protected ClaseFormEvent(ClaseForm source, Clase clase) {
+            super(source, false);
+            this.clase = clase;
+        }
+
+        public Clase getClase() {
+            return clase;
+        }
+    }
+
+
+    public static class SaveEvent extends ClaseFormEvent {
+        SaveEvent(ClaseForm source, Clase clase) {
+            super(source, clase);
+        }
+    }
+
+    public static class DeleteEvent extends ClaseFormEvent {
+        DeleteEvent(ClaseForm source, Clase clase) {
+            super(source, clase);
+        }
+    }
+
+    public static class CloseEvent extends ClaseFormEvent {
+        CloseEvent(ClaseForm source) {
+            super(source, null);
+        }
+    }
+
+    public <T extends ComponentEvent<?>> Registration addSaveListener(ComponentEventListener<T> listener) {
+        return addListener(SaveEvent.class, (ComponentEventListener) listener);
+    }
+
+    public <T extends ComponentEvent<?>> Registration addDeleteListener(ComponentEventListener<T> listener) {
+        return addListener(DeleteEvent.class, (ComponentEventListener) listener);
+    }
+
+    public <T extends ComponentEvent<?>> Registration addCloseListener(ComponentEventListener<T> listener) {
+        return addListener(CloseEvent.class, (ComponentEventListener) listener);
+    }
+
+}
+
+
+
