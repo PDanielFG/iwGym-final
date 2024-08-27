@@ -40,7 +40,7 @@ public class ClasesAdmin extends VerticalLayout {
     private AuthenticatedUser authenticatedUser;
 
     public ClasesAdmin(ClaseService service, AuthenticatedUser authenticatedUser) {
-        this.service = service;     //Me daba error porque lo tenia comentado. There was an exception while trying to navigate to '' with the root cause 'java.lang.NullPointerException: Cannot invoke "es.uca.iw.fullstackwebapp.allegado.AllegadoService.findAllAllegados(String)" because "this.service" is null'
+        this.service = service;     //Me daba error porque lo tenia comentado. There was an exception while trying to navigate to '' with the root cause 'java.lang.NullPointerException:
         this.authenticatedUser = authenticatedUser;
         addClassName("list-view");
         setSizeFull();
@@ -64,18 +64,18 @@ public class ClasesAdmin extends VerticalLayout {
     private void configureForm() {
         form = new ClaseForm();
         form.setWidth("25em");
-        form.addSaveListener(this::saveAllegado);
-        form.addDeleteListener(this::deleteAllegado);
+        form.addSaveListener(this::saveClase);
+        form.addDeleteListener(this::deleteClase);
         form.addCloseListener(e -> closeEditor());
     }
 
-    private void saveAllegado(ClaseForm.SaveEvent event) {
+    private void saveClase(ClaseForm.SaveEvent event) {
         service.saveClase(event.getClase());
         updateList();
         closeEditor();
     }
 
-    private void deleteAllegado(ClaseForm.DeleteEvent event) {
+    private void deleteClase(ClaseForm.DeleteEvent event) {
         service.deleteClase(event.getClase());
         updateList();
         closeEditor();
@@ -101,7 +101,7 @@ public class ClasesAdmin extends VerticalLayout {
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
         grid.asSingleSelect().addValueChangeListener(event ->
-                editAllegado(event.getValue()));
+                editClase(event.getValue()));
     }
 
     private Component getToolbar() {
@@ -110,15 +110,15 @@ public class ClasesAdmin extends VerticalLayout {
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
         filterText.addValueChangeListener(e -> updateList());
 
-        Button addAllegadoButton = new Button("Añadir clase");
-        addAllegadoButton.addClickListener(click -> addAllegado());
+        Button addClaseButton = new Button("Añadir clase");
+        addClaseButton.addClickListener(click -> addClase());
 
-        var toolbar = new HorizontalLayout(filterText, addAllegadoButton);
+        var toolbar = new HorizontalLayout(filterText, addClaseButton);
         toolbar.addClassName("toolbar");
         return toolbar;
     }
 
-    public void editAllegado(Clase clase) {
+    public void editClase(Clase clase) {
         if (clase == null) {
             closeEditor();
         } else {
@@ -134,9 +134,9 @@ public class ClasesAdmin extends VerticalLayout {
         removeClassName("editing");
     }
 
-    private void addAllegado() {
+    private void addClase() {
         grid.asSingleSelect().clear();
-        editAllegado(new Clase());
+        editClase(new Clase());
     }
 
     //Como se trata de la vista del administrador, listamos todas las clases, sin necesidad

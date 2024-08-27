@@ -115,7 +115,6 @@ public class ClaseForm extends FormLayout{
                     return; // Salir del método si la capacidad no es válida
                 }
                 clase.setInstructor(instructor.getValue());
-                //allegado.setUser(currentUser); // Establecer el usuario actual
 
                 // Disparar el evento de guardar
                 fireEvent(new SaveEvent(this, clase));

@@ -35,7 +35,7 @@ public class InstructoresAdmin extends VerticalLayout {
     private AuthenticatedUser authenticatedUser;
 
     public InstructoresAdmin(InstructorService service, AuthenticatedUser authenticatedUser) {
-        this.service = service;     //Me daba error porque lo tenia comentado. There was an exception while trying to navigate to '' with the root cause 'java.lang.NullPointerException: Cannot invoke "es.uca.iw.fullstackwebapp.allegado.AllegadoService.findAllAllegados(String)" because "this.service" is null'
+        this.service = service;     //Me daba error porque lo tenia comentado. There was an exception while trying to navigate to '' with the root cause 'java.lang.NullPointerException:
         this.authenticatedUser = authenticatedUser;
         addClassName("list-view");
         setSizeFull();
@@ -102,10 +102,10 @@ public class InstructoresAdmin extends VerticalLayout {
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
         filterText.addValueChangeListener(e -> updateList());
 
-        Button addAllegadoButton = new Button("Añadir instructor");
-        addAllegadoButton.addClickListener(click -> addInstructor());
+        Button addClaseButton = new Button("Añadir instructor");
+        addClaseButton.addClickListener(click -> addInstructor());
 
-        var toolbar = new HorizontalLayout(filterText, addAllegadoButton);
+        var toolbar = new HorizontalLayout(filterText, addClaseButton);
         toolbar.addClassName("toolbar");
         return toolbar;
     }
