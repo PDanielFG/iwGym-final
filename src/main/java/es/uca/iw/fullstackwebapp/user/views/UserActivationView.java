@@ -53,6 +53,11 @@ public class UserActivationView extends VerticalLayout {
 
         setMargin(true);
 
+        //centrar contenido
+        setAlignItems(Alignment.CENTER);
+        setJustifyContentMode(JustifyContentMode.CENTER);
+        setSizeFull();
+
         add(title, new HorizontalLayout(email, secretCode), activate, status);
 
         activate.addClickListener(e -> onActivateButtonClick());

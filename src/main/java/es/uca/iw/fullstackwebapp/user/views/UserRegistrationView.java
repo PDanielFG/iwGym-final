@@ -18,7 +18,7 @@ import es.uca.iw.fullstackwebapp.user.services.UserManagementService;
 import java.io.Serial;
 
 @PageTitle("Registrate User")
-@Route(value = "userregistration")
+@Route(value = "register")
 //@RouteAlias("")
 @AnonymousAllowed
 public class UserRegistrationView extends VerticalLayout {
@@ -65,6 +65,12 @@ public class UserRegistrationView extends VerticalLayout {
         status.setVisible(false);
 
         setMargin(true);
+
+        //Para centrar el contenido en la pantalla
+        setAlignItems(Alignment.CENTER);
+        setJustifyContentMode(JustifyContentMode.CENTER);
+        setSizeFull();
+
 
         add(title, username, email, password, password2, register, status);
 
