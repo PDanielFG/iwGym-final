@@ -19,6 +19,8 @@ import es.uca.iw.fullstackwebapp.user.domain.User;
 import es.uca.iw.fullstackwebapp.user.security.AuthenticatedUser;
 import es.uca.iw.fullstackwebapp.user.views.UserHomeView;
 import org.vaadin.lineawesome.LineAwesomeIcon;
+import es.uca.iw.fullstackwebapp.admin.AdminView;
+
 
 import java.util.Optional;
 
@@ -74,6 +76,9 @@ public class MainLayout extends AppLayout {
 
         if (accessChecker.hasAccess(BookManagementView.class)) {
             nav.addItem(new SideNavItem("Book Management", BookManagementView.class, LineAwesomeIcon.BOOK_DEAD_SOLID.create()));
+        }
+        if (accessChecker.hasAccess(AdminView.class)) {
+            nav.addItem(new SideNavItem("Admin View", AdminView.class, LineAwesomeIcon.USER_SHIELD_SOLID.create()));
         }
 
         return nav;

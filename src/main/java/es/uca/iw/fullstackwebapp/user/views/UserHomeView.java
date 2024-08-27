@@ -12,7 +12,7 @@ import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Inicio")
 @PermitAll
-@Route(value = "userhome", layout = MainLayout.class)
+@Route(value = "", layout = MainLayout.class)
 public class UserHomeView extends VerticalLayout {
 
     public UserHomeView() {
