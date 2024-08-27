@@ -18,6 +18,7 @@ import es.uca.iw.fullstackwebapp.book.BookListView;
 import es.uca.iw.fullstackwebapp.book.BookManagementView;
 import es.uca.iw.fullstackwebapp.user.domain.User;
 import es.uca.iw.fullstackwebapp.user.security.AuthenticatedUser;
+import es.uca.iw.fullstackwebapp.user.views.ClasesListView;
 import es.uca.iw.fullstackwebapp.user.views.UserHomeView;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 import es.uca.iw.fullstackwebapp.admin.AdminView;
@@ -73,7 +74,7 @@ public class MainLayout extends AppLayout {
         }
 
         if (accessChecker.hasAccess(BookListView.class)) {
-            nav.addItem(new SideNavItem("Book List", BookListView.class, LineAwesomeIcon.BOOK_DEAD_SOLID.create()));
+            nav.addItem(new SideNavItem("Clases Disponibles", ClasesListView.class, LineAwesomeIcon.BOOK_DEAD_SOLID.create()));
         }
 
         if (accessChecker.hasAccess(BookManagementView.class)) {
