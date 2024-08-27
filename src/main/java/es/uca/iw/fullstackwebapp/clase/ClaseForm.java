@@ -19,6 +19,7 @@ import com.vaadin.flow.component.notification.Notification;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 
@@ -62,6 +63,10 @@ public class ClaseForm extends FormLayout{
     public void setClase(Clase clase) {
         this.clase = clase;
         binder.readBean(clase);
+    }
+    public void setInstructors(List<Instructor> instructors) {
+        instructor.setItems(instructors);
+        instructor.setItemLabelGenerator(Instructor::getName);
     }
 
     private void validateAndSave() {

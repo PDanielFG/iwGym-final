@@ -21,6 +21,9 @@ import java.time.format.DateTimeFormatter;
 import es.uca.iw.fullstackwebapp.user.security.AuthenticatedUser;
 import es.uca.iw.fullstackwebapp.clase.Clase;
 import java.util.List;
+import es.uca.iw.fullstackwebapp.instructor.Instructor;
+import es.uca.iw.fullstackwebapp.instructor.InstructorService;
+
 
 
 
@@ -37,11 +40,14 @@ public class ClasesAdmin extends VerticalLayout {
     TextField filterText = new TextField();
     ClaseForm form;
     private ClaseService service;
+    private InstructorService instructorService;
     private AuthenticatedUser authenticatedUser;
+    private Instructor instructor;
 
-    public ClasesAdmin(ClaseService service, AuthenticatedUser authenticatedUser) {
+    public ClasesAdmin(ClaseService service, InstructorService instructorService, AuthenticatedUser authenticatedUser) {
         this.service = service;     //Me daba error porque lo tenia comentado. There was an exception while trying to navigate to '' with the root cause 'java.lang.NullPointerException:
         this.authenticatedUser = authenticatedUser;
+        this.instructorService = instructorService;
         addClassName("list-view");
         setSizeFull();
         configureGrid();
@@ -67,6 +73,11 @@ public class ClasesAdmin extends VerticalLayout {
         form.addSaveListener(this::saveClase);
         form.addDeleteListener(this::deleteClase);
         form.addCloseListener(e -> closeEditor());
+
+        // Configura el ComboBox de instructores
+        List<Instructor> instructors = instructorService.findAll(); // Obtén la lista de instructores
+        form.setInstructors(instructors); // Configura el ComboBox en el formulario
+
     }
 
     private void saveClase(ClaseForm.SaveEvent event) {
@@ -96,7 +107,13 @@ public class ClasesAdmin extends VerticalLayout {
                 return ""; // Retorna una cadena vacía si el valor es null
             }
         }).setHeader("Horario");        grid.addColumn(Clase::getCapacidad).setHeader("Capacidad");
-        grid.addColumn(Clase::getInstructor).setHeader("Instructor");
+
+        // Configurar la columna para mostrar el nombre completo del instructor
+        grid.addColumn(clase -> {
+            Instructor instructor = clase.getInstructor();
+            return instructor != null ? instructor.getName() + " " + instructor.getApellidos() : ""; // Concatenar nombre y apellidos
+        }).setHeader("Instructor");
+
 
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
