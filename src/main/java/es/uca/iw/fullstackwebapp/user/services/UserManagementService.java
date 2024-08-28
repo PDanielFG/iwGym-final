@@ -104,4 +104,8 @@ public class UserManagementService implements UserDetailsService {
     public List<User> findAll() {
         return repository.findAll();
     }
+
+    public Optional<User> findById(UUID id) {
+        return repository.findById(id);
+    }
 }

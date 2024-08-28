@@ -50,4 +50,9 @@ public class ReservaService {
     public List<Reserva> findAll() {
         return reservaRepository.findAll();
     }
+
+    public List<Reserva> getReservasPorUsuario(User usuario) {
+        return reservaRepository.findByUsuario(usuario);
+    }
+
 }
