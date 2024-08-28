@@ -73,8 +73,10 @@ public class ReservaAdmin extends VerticalLayout {
 
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
-        //grid.asSingleSelect().addValueChangeListener(event ->
-        //        editInstructor(event.getValue()));
+        grid.asSingleSelect().addValueChangeListener(event -> {
+            getUI().ifPresent(ui -> ui.navigate("userReservas/" + event.getValue().getId()));
+        });
+
     }
 
     private Component getToolbar() {
