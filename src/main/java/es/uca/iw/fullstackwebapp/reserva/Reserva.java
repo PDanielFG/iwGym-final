@@ -27,6 +27,8 @@ public class Reserva {
 
     public Reserva(String username, Long id) {
     }
+    public Reserva() {
+    }
 
     public Reserva(User usuario, Clase clase) {
         this.usuario = usuario;

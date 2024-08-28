@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import es.uca.iw.fullstackwebapp.user.domain.User;
 import es.uca.iw.fullstackwebapp.user.services.UserManagementService;
 
+import java.util.List;
+
 @Service
 public class ReservaService {
 
@@ -38,5 +40,9 @@ public class ReservaService {
 
         // Guardar la reserva en la base de datos
         reservaRepository.save(reserva);
+    }
+
+    public List<Reserva> findAll() {
+        return reservaRepository.findAll();
     }
 }

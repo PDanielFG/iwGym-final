@@ -19,6 +19,7 @@ import es.uca.iw.fullstackwebapp.book.BookManagementView;
 import es.uca.iw.fullstackwebapp.user.domain.User;
 import es.uca.iw.fullstackwebapp.user.security.AuthenticatedUser;
 import es.uca.iw.fullstackwebapp.user.views.ClasesListView;
+import es.uca.iw.fullstackwebapp.user.views.ReservaListView;
 import es.uca.iw.fullstackwebapp.user.views.UserHomeView;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 import es.uca.iw.fullstackwebapp.admin.AdminView;
@@ -76,14 +77,17 @@ public class MainLayout extends AppLayout {
         if (accessChecker.hasAccess(BookListView.class)) {
             nav.addItem(new SideNavItem("Clases Disponibles", ClasesListView.class, LineAwesomeIcon.BOOK_DEAD_SOLID.create()));
         }
+        if (accessChecker.hasAccess(ReservaListView.class)) {
+            nav.addItem(new SideNavItem("Mis Reservas", ReservaListView.class, LineAwesomeIcon.BOOK_DEAD_SOLID.create()));
+        }
 
         if (accessChecker.hasAccess(BookManagementView.class)) {
             nav.addItem(new SideNavItem("Book Management", BookManagementView.class, LineAwesomeIcon.BOOK_DEAD_SOLID.create()));
         }
-        if (accessChecker.hasAccess(AdminView.class)) {
+        if (accessChecker.hasAccess(ClasesAdmin.class)) {
             nav.addItem(new SideNavItem("ADMIN. Clases", ClasesAdmin.class, LineAwesomeIcon.USER_SHIELD_SOLID.create()));
         }
-       if (accessChecker.hasAccess(AdminView.class)) {
+       if (accessChecker.hasAccess(InstructoresAdmin.class)) {
             nav.addItem(new SideNavItem("ADMIN. Instructores", InstructoresAdmin.class, LineAwesomeIcon.USER_SHIELD_SOLID.create()));
         }
 
