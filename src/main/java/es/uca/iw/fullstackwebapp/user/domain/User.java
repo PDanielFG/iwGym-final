@@ -30,9 +30,9 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String username;
 
-    @NotEmpty
-    @Column(unique = true)
-    private String apellido;
+    //@NotEmpty
+    //@Column(unique = true)
+    //private String apellido;
 
     @NotEmpty
     @Email
@@ -106,12 +106,12 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    public String getApellido() {
+    /*public String getApellido() {
         return apellido;
-    }
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
+    }*/
+    //public void setApellido(String apellido) {
+    //    this.apellido = apellido;
+    //}
 
     @Override
     public int hashCode() {
