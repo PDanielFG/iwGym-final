@@ -6,6 +6,7 @@ import es.uca.iw.fullstackwebapp.user.domain.User;
 import es.uca.iw.fullstackwebapp.user.services.UserManagementService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReservaService {
@@ -16,6 +17,10 @@ public class ReservaService {
     public ReservaService(ReservaRespoitory reservaRepository, UserManagementService userService) {
         this.reservaRepository = reservaRepository;
         this.userService = userService;
+    }
+
+    public Optional<Reserva> findById(Long id) {
+        return reservaRepository.findById(id);
     }
 
     public void save(Reserva reserva) {

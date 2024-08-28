@@ -2,6 +2,7 @@ package es.uca.iw.fullstackwebapp.admin;
 
 
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
@@ -20,7 +21,8 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import java.util.List;
-
+import java.util.Optional;
+import es.uca.iw.fullstackwebapp.reserva.Reserva;
 
 
 @SpringComponent
@@ -35,6 +37,9 @@ public class ReservaAdmin extends VerticalLayout {
     TextField filterText = new TextField();
     private UserManagementService service;
     private AuthenticatedUser authenticatedUser;
+    private Reserva reserva;
+    private Long id;
+
 
     public ReservaAdmin(UserManagementService service, AuthenticatedUser authenticatedUser) {
         this.service = service;     //Me daba error porque lo tenia comentado. There was an exception while trying to navigate to '' with the root cause 'java.lang.NullPointerException:
@@ -59,25 +64,28 @@ public class ReservaAdmin extends VerticalLayout {
 
 
     private void configureGrid() {
-        grid.removeAllColumns();    //importante esta linea
+        grid.removeAllColumns();  // Limpia todas las columnas
         grid.addClassNames("instructor-grid");
         grid.setSizeFull();
+        grid.setSelectionMode(Grid.SelectionMode.SINGLE);
 
-
-        grid.addColumn(user -> user.getUsername() + " " + user.getApellido())
-                .setHeader("Nombre Completo");
-
+        grid.addColumn(User::getUsername).setHeader("Nombre de usuario");
         grid.addColumn(User::getEmail).setHeader("Correo electrónico");
-
         grid.addColumn(user -> user.getReservas().size()).setHeader("Número de reservas");
 
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
         grid.asSingleSelect().addValueChangeListener(event -> {
-            getUI().ifPresent(ui -> ui.navigate("userReservas/" + event.getValue().getId()));
+            User selectedUser = event.getValue();
+            if (selectedUser != null) {
+                // Navega a la vista de reservas del usuario usando su UUID
+                getUI().ifPresent(ui -> ui.navigate("userReservas/" + selectedUser.getId()));
+            } else {
+                Notification.show("Seleccione un usuario para ver sus reservas.");
+            }
         });
-
     }
+
 
     private Component getToolbar() {
         filterText.setPlaceholder("Filter by name or nickname...");
