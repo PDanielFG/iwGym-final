@@ -74,6 +74,9 @@ public class ReservaListView extends VerticalLayout {
                     : "";
         }).setHeader("Instructor");
 
+        //Estado de la reserva
+        grid.addColumn(reserva -> reserva.getEstado()).setHeader("Estado");
+
 
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
     }
@@ -92,6 +95,7 @@ public class ReservaListView extends VerticalLayout {
     private void updateList() {
         // Obtener todas las reservas
         List<Reserva> todasLasReservas = reservaService.findAll();
+        todasLasReservas.forEach(reserva -> System.out.println("Reserva ID: " + reserva.getId() + ", Estado: " + reserva.getEstado()));
         grid.setItems(todasLasReservas);
 
         // Obtener el texto del filtro

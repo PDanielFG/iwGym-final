@@ -3,6 +3,7 @@ package es.uca.iw.fullstackwebapp.reserva;
 import es.uca.iw.fullstackwebapp.clase.Clase;
 import es.uca.iw.fullstackwebapp.user.domain.User;
 import jakarta.persistence.*;
+import es.uca.iw.fullstackwebapp.reserva.estadoReserva;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +14,9 @@ public class Reserva {
     private Long id;
 
     private LocalDateTime fechaReserva;
+
+    @Enumerated(EnumType.STRING)
+    private estadoReserva estado;
 
     // Relación con la entidad Clase
     //la parte de manyToOne debe de llamarse el atributo igual que en oneToMany
@@ -34,6 +38,7 @@ public class Reserva {
         this.usuario = usuario;
         this.clase = clase;
         this.fechaReserva = LocalDateTime.now();    //fecha actual
+        this.estado=estadoReserva.PENDIENTE;
     }
 
     public Long getId() {
@@ -66,5 +71,12 @@ public class Reserva {
 
     public void setUsuario(User usuario) {
         this.usuario = usuario;
+    }
+
+    public estadoReserva getEstado() {
+        return estado;
+    }
+    public void setEstado(estadoReserva estado) {
+        this.estado = estado;
     }
 }
