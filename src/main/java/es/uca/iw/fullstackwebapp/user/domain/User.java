@@ -31,6 +31,10 @@ public class User implements UserDetails {
     private String username;
 
     @NotEmpty
+    @Column(unique = true)
+    private String apellido;
+
+    @NotEmpty
     @Email
     @Column(unique = true)
     private String email;
@@ -40,7 +44,9 @@ public class User implements UserDetails {
 
     private boolean active;
 
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    //para solucionar los errores que me daba de modo lazy hibernate etc...
+    //basta con poner el fetch en eager
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Reserva> reservas;
 
     public List<Reserva> getReservas() {
@@ -98,6 +104,13 @@ public class User implements UserDetails {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
     }
 
     @Override

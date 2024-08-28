@@ -101,4 +101,7 @@ public class UserManagementService implements UserDetailsService {
     }
 
 
+    public List<User> findAll() {
+        return repository.findAll();
+    }
 }

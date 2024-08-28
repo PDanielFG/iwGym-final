@@ -14,6 +14,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.server.auth.AccessAnnotationChecker;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import es.uca.iw.fullstackwebapp.admin.ClasesAdmin;
+import es.uca.iw.fullstackwebapp.admin.InstructoresAdmin;
 import es.uca.iw.fullstackwebapp.book.BookListView;
 import es.uca.iw.fullstackwebapp.book.BookManagementView;
 import es.uca.iw.fullstackwebapp.user.domain.User;
@@ -22,8 +23,7 @@ import es.uca.iw.fullstackwebapp.user.views.ClasesListView;
 import es.uca.iw.fullstackwebapp.user.views.ReservaListView;
 import es.uca.iw.fullstackwebapp.user.views.UserHomeView;
 import org.vaadin.lineawesome.LineAwesomeIcon;
-import es.uca.iw.fullstackwebapp.admin.AdminView;
-import es.uca.iw.fullstackwebapp.admin.InstructoresAdmin;
+import es.uca.iw.fullstackwebapp.admin.ReservaAdmin;
 
 
 import java.util.Optional;
@@ -87,8 +87,11 @@ public class MainLayout extends AppLayout {
         if (accessChecker.hasAccess(ClasesAdmin.class)) {
             nav.addItem(new SideNavItem("ADMIN. Clases", ClasesAdmin.class, LineAwesomeIcon.USER_SHIELD_SOLID.create()));
         }
-       if (accessChecker.hasAccess(InstructoresAdmin.class)) {
+        if (accessChecker.hasAccess(InstructoresAdmin.class)) {
             nav.addItem(new SideNavItem("ADMIN. Instructores", InstructoresAdmin.class, LineAwesomeIcon.USER_SHIELD_SOLID.create()));
+        }
+       if (accessChecker.hasAccess(ReservaAdmin.class)) {
+            nav.addItem(new SideNavItem("ADMIN. Reservas", ReservaAdmin.class, LineAwesomeIcon.USER_SHIELD_SOLID.create()));
         }
 
         return nav;
