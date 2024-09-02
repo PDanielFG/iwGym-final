@@ -36,7 +36,6 @@ public class EmailRealService implements EmailService {
         return serverUrl;
     }
 
-    @Override
     public boolean sendRegistrationEmail(User user) {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
@@ -61,7 +60,6 @@ public class EmailRealService implements EmailService {
         return true;
     }
 
-    @Override
     public boolean sendReservationStatusEmail(User user, EstadoReserva estadoReserva, Clase clase) {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
