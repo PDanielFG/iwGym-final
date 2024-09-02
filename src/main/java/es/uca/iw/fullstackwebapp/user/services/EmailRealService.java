@@ -65,5 +65,53 @@ public class EmailRealService implements EmailService {
         return true;
     }
 
+    // Método para enviar notificaciones de estado de la reserva
+    public boolean sendReservationStatusEmail(User user, String reservationStatus) {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
 
+        String subject = "Estado de su reserva";
+        String body = "Estimado/a " + user.getUsername() + ",\n\n"
+                + "El estado de su reserva ha cambiado: " + reservationStatus + ".\n"
+                + "Gracias por utilizar nuestro servicio.";
+
+        try {
+            helper.setFrom(defaultMail);
+            helper.setTo(user.getEmail());
+            helper.setSubject(subject);
+            helper.setText(body);
+            this.mailSender.send(message);
+        } catch (MailException | MessagingException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    // Método para enviar recordatorios de clase
+    public boolean sendClassReminderEmail(User user, String classDetails, String classDateTime) {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
+
+        String subject = "Recordatorio de clase";
+        String body = "Estimado/a " + user.getUsername() + ",\n\n"
+                + "Este es un recordatorio de su próxima clase:\n"
+                + "Detalles: " + classDetails + "\n"
+                + "Fecha y hora: " + classDateTime + "\n\n"
+                + "¡Nos vemos pronto!";
+
+        try {
+            helper.setFrom(defaultMail);
+            helper.setTo(user.getEmail());
+            helper.setSubject(subject);
+            helper.setText(body);
+            this.mailSender.send(message);
+        } catch (MailException | MessagingException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
 }
