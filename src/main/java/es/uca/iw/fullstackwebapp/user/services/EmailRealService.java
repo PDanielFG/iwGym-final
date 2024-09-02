@@ -44,10 +44,10 @@ public class EmailRealService implements EmailService {
 
         MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
 
-        String subject = "Welcome";
-        String body = "You should active your account. "
-                + "Go to " + getServerUrl() + "useractivation "
-                + "and introduce your mail and the following code: "
+        String subject = "Bienvenido";
+        String body = "Por favor, verifique su cuenta. "
+                + "Haga click en " + getServerUrl() + "useractivation "
+                + "e introduzca el siguiente su correo y el código: "
                 + user.getRegisterCode();
 
 
