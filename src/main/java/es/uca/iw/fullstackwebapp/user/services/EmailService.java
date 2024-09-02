@@ -7,4 +7,8 @@ public interface EmailService {
 
     boolean sendRegistrationEmail(User user);
 
+    boolean sendClassReminderEmail(User user, String classDetails, String classDateTime);
+
+
+    boolean sendReservationStatusEmail(User user, String status);
 }

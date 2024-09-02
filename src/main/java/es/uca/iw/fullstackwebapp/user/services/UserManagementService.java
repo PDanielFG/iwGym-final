@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -48,6 +49,15 @@ public class UserManagementService implements UserDetailsService {
             return false;
         }
     }
+
+    public void notifyReservationStatus(User user, String status) {
+        emailService.sendReservationStatusEmail(user, status);
+    }
+
+    public void sendClassReminder(User user, String classDetails, String classDateTime) {
+        emailService.sendClassReminderEmail(user, classDetails, classDateTime);
+    }
+
 
     public User findByUsername(String username) {
         Optional<User> userOptional = userRepository.findByUsername(username);
