@@ -20,6 +20,7 @@ import es.uca.iw.fullstackwebapp.reserva.ReservaService;
 import es.uca.iw.fullstackwebapp.reserva.EstadoReserva;
 import es.uca.iw.fullstackwebapp.user.domain.User;
 import es.uca.iw.fullstackwebapp.user.security.AuthenticatedUser;
+import es.uca.iw.fullstackwebapp.user.services.EmailService;
 import es.uca.iw.fullstackwebapp.user.services.UserManagementService;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.context.annotation.Scope;
@@ -37,15 +38,17 @@ public class UserReservas extends VerticalLayout implements BeforeEnterObserver 
     private UUID id;
     private final ReservaService reservaService;
     private final UserManagementService userService;
+    private final EmailService emailService;
 
     private Grid<Reserva> grid = new Grid<>(Reserva.class);
     private Button saveButton = new Button("Guardar Cambios");
     private Binder<Reserva> binder = new BeanValidationBinder<>(Reserva.class);
     private Reserva selectedReserva;
 
-    public UserReservas(ReservaService reservaService, AuthenticatedUser authenticatedUser, UserManagementService userService) {
+    public UserReservas(ReservaService reservaService, AuthenticatedUser authenticatedUser, UserManagementService userService, EmailService emailService) {
         this.reservaService = reservaService;
         this.userService = userService;
+        this.emailService = emailService;
 
         // Configurar Grid
         grid.removeAllColumns();
@@ -97,7 +100,16 @@ public class UserReservas extends VerticalLayout implements BeforeEnterObserver 
             try {
                 binder.writeBean(selectedReserva); // Escribir el valor en el bean
                 reservaService.save(selectedReserva);
-                Notification.show("Cambios guardados.", 3000, Notification.Position.MIDDLE);
+
+                // Obtener el usuario y la clase para enviar el correo
+                User usuario = selectedReserva.getUsuario();
+                EstadoReserva estadoReserva = selectedReserva.getEstado();
+                Clase clase = selectedReserva.getClase();
+
+                // Enviar correo
+                emailService.modStatusReservationMail(usuario, estadoReserva, clase);
+
+                Notification.show("Cambios guardados y notificación vía email enviada.", 3000, Notification.Position.MIDDLE);
                 grid.getEditor().cancel(); // Cancelar el editor después de guardar
                 selectedReserva = null; // Limpiar la selección
             } catch (Exception e) {

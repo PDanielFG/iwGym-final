@@ -69,6 +69,15 @@ public class EmailFakeService implements EmailService {
         }
     }
 
+    @Override
+    public boolean modStatusReservationMail(User user, EstadoReserva estadoReserva, Clase clase) {
+        // Implementación simulada para pruebas
+        System.out.println("Simulación de envío de correo a: " + user.getEmail());
+        System.out.println("Estado de reserva: " + estadoReserva.name());
+        System.out.println("Detalles de clase: " + clase.getName());
+        return true;
+    }
+
 
     @Override
     public boolean sendClassReminderEmail(User user, String classDetails, String classDateTime) {

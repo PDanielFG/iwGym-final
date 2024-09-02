@@ -28,23 +28,17 @@ public class EmailRealService implements EmailService {
         this.mailSender = mailSender;
     }
 
-
     private String getServerUrl() {
-
         // Generate the server URL
         String serverUrl = "http://";
         serverUrl += InetAddress.getLoopbackAddress().getHostAddress();
         serverUrl += ":" + serverPort + "/";
         return serverUrl;
-
     }
-
 
     @Override
     public boolean sendRegistrationEmail(User user) {
-
         MimeMessage message = mailSender.createMimeMessage();
-
         MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
 
         String subject = "Bienvenido";
@@ -52,7 +46,6 @@ public class EmailRealService implements EmailService {
                 + "Haga click en " + getServerUrl() + "useractivation "
                 + "e introduzca el siguiente su correo y el código: "
                 + user.getRegisterCode();
-
 
         try {
             helper.setFrom(defaultMail);
@@ -68,7 +61,6 @@ public class EmailRealService implements EmailService {
         return true;
     }
 
-    // Método para enviar notificaciones de estado de la reserva
     @Override
     public boolean sendReservationStatusEmail(User user, EstadoReserva estadoReserva, Clase clase) {
         MimeMessage message = mailSender.createMimeMessage();
@@ -102,10 +94,37 @@ public class EmailRealService implements EmailService {
         return true;
     }
 
+    public boolean modStatusReservationMail(User user, EstadoReserva estadoReserva, Clase clase) {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
+
+        String subject = "Actualización de Estado de Reserva";
+        String body = "Estimado/a " + user.getUsername() + ",\n\n"
+                + "El estado de su reserva ha sido actualizado a: " + estadoReserva.name() + ".\n\n"
+                + "Detalles de la clase:\n"
+                + "Nombre: " + clase.getName() + "\n"
+                + "Descripción: " + clase.getDescription() + "\n"
+                + "Horario: " + (clase.getHorario() != null ? clase.getHorario().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) : "No especificado") + "\n"
+                + "Capacidad: " + clase.getCapacidad() + "\n\n"
+                + "Gracias por utilizar nuestro servicio. ¡Nos vemos pronto!\n"
+                + "¡Saludos de todo el equipo de IwGymUca!";
+
+        try {
+            helper.setFrom(defaultMail);
+            helper.setTo(user.getEmail());
+            helper.setSubject(subject);
+            helper.setText(body);
+            mailSender.send(message);
+            System.out.println("Correo enviado a: " + user.getEmail());  // Mensaje de depuración
+            return true;
+        } catch (MailException | MessagingException ex) {
+            ex.printStackTrace();
+            System.err.println("Error al enviar el correo: " + ex.getMessage());  // Mensaje de error
+            return false;
+        }
+    }
 
 
-
-    // Método para enviar recordatorios de clase
     public boolean sendClassReminderEmail(User user, String classDetails, String classDateTime) {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");

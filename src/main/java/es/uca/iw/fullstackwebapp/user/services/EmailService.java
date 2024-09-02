@@ -13,4 +13,7 @@ public interface EmailService {
 
 
     boolean sendReservationStatusEmail(User user, EstadoReserva estadoReserva, Clase clase);
-}
+
+    boolean modStatusReservationMail(User user, EstadoReserva estadoReserva, Clase clase);
+
+    }

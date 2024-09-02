@@ -55,4 +55,7 @@ public class ReservaService {
         return reservaRepository.findByUsuario(usuario);
     }
 
+    public Reserva findByUser(User user) {
+        return (Reserva) reservaRepository.findByUsuario(user);
+    }
 }
