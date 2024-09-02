@@ -1,6 +1,8 @@
 package es.uca.iw.fullstackwebapp.user.services;
 
 
+import es.uca.iw.fullstackwebapp.clase.Clase;
+import es.uca.iw.fullstackwebapp.reserva.EstadoReserva;
 import es.uca.iw.fullstackwebapp.user.domain.User;
 
 public interface EmailService {
@@ -10,5 +12,5 @@ public interface EmailService {
     boolean sendClassReminderEmail(User user, String classDetails, String classDateTime);
 
 
-    boolean sendReservationStatusEmail(User user, String status);
+    boolean sendReservationStatusEmail(User user, EstadoReserva estadoReserva, Clase clase);
 }

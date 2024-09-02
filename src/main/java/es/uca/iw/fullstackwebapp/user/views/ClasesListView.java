@@ -13,6 +13,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import es.uca.iw.fullstackwebapp.clase.ClaseService;
+import es.uca.iw.fullstackwebapp.reserva.EstadoReserva;
 import es.uca.iw.fullstackwebapp.reserva.ReservaService;
 import es.uca.iw.fullstackwebapp.user.domain.User;
 import es.uca.iw.fullstackwebapp.user.services.EmailService;
@@ -123,15 +124,18 @@ public class ClasesListView extends VerticalLayout {
             // Llamar al servicio de reserva para crear la reserva
             reservaService.reserve(username, clase);
 
-            // Enviar notificación por correo
-            String status = "Reservada";
-            emailService.sendReservationStatusEmail(user, status);
+            // Definir el estado de la reserva
+            EstadoReserva estadoReserva = EstadoReserva.PENDIENTE;
+
+            // Enviar notificación por correo con el estado de la reserva y los detalles de la clase
+            emailService.sendReservationStatusEmail(user, estadoReserva, clase);
 
             // Actualizar la vista o mostrar un mensaje de éxito
-            Notification.show("Clase reservada exitosamente");
+            Notification.show("Clase reservada exitosamente.\n Para más información acerca de la reserva, compruebe su correo electrónico", 3000, Notification.Position.MIDDLE);
         } catch (Exception e) {
             // Manejo de errores, mostrar mensaje de error
-            Notification.show("Error al reservar la clase: " + e.getMessage(), 3000, Notification.Position.BOTTOM_START);
+            Notification.show("Error al reservar la clase: " + e.getMessage(), 3000, Notification.Position.MIDDLE);
         }
     }
+
 }

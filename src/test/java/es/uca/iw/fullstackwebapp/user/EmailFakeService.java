@@ -4,6 +4,9 @@ import es.uca.iw.fullstackwebapp.user.domain.User;
 import es.uca.iw.fullstackwebapp.user.services.EmailService;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import es.uca.iw.fullstackwebapp.reserva.EstadoReserva;
+import es.uca.iw.fullstackwebapp.clase.Clase;
+
 
 @Service
 @Primary
@@ -34,25 +37,38 @@ public class EmailFakeService implements EmailService {
     }
 
     @Override
-    public boolean sendReservationStatusEmail(User user, String status) {
-        String subject = "Reservation Status Update";
-        String body = "Your reservation status has been updated to: " + status;
+    public boolean sendReservationStatusEmail(User user, EstadoReserva estadoReserva, Clase clase) {
+        // Definir el asunto y el cuerpo del correo
+        String subject = "Estado de su reserva";
+        String body = "Estimado/a " + user.getUsername() + ",\n\n"
+                + "El estado de su reserva ha cambiado a: " + estadoReserva.name() + ".\n\n"
+                + "Detalles de la clase:\n"
+                + "Nombre: " + clase.getName() + "\n"
+                + "Descripción: " + clase.getDescription() + "\n"
+                + "Horario: " + (clase.getHorario() != null ? clase.getHorario().toString() : "No especificado") + "\n"
+                + "Capacidad: " + clase.getCapacidad() + "\n\n"
+                + "Gracias por utilizar nuestro servicio. ¡Nos vemos pronto!\n"
+                + "¡Saludos de todo el equipo de IwGymUca!";
 
+        // Simulación del envío del correo
         try {
             System.out.println("From: app (testing)");
             System.out.println("To: " + user.getEmail());
             System.out.println("Subject: " + subject);
             System.out.println("Body: " + body);
 
+            // Simular un retraso en el envío del correo
             int secondsToSleep = 5;
             Thread.sleep(secondsToSleep * 1000);
             System.out.println("Email send simulation done!");
             return true;
         } catch (InterruptedException ie) {
+            // Manejo de la interrupción del hilo
             Thread.currentThread().interrupt();
             return false;
         }
     }
+
 
     @Override
     public boolean sendClassReminderEmail(User user, String classDetails, String classDateTime) {

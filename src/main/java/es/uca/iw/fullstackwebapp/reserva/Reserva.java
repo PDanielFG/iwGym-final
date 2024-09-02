@@ -33,7 +33,7 @@ public class Reserva {
     public Reserva() {
     }
 
-    public Reserva(User usuario, Clase clase) {
+    public Reserva(User usuario, Clase clase, EstadoReserva estado) {
         this.usuario = usuario;
         this.clase = clase;
         this.fechaReserva = LocalDateTime.now();    //fecha actual

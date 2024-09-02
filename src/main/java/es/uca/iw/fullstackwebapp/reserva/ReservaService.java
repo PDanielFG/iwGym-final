@@ -41,7 +41,7 @@ public class ReservaService {
         }
 
         // Crear una nueva reserva
-        Reserva reserva = new Reserva(usuario, clase);
+        Reserva reserva = new Reserva(usuario, clase, EstadoReserva.PENDIENTE);
 
         // Guardar la reserva en la base de datos
         reservaRepository.save(reserva);

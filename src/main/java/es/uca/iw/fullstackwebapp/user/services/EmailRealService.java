@@ -1,5 +1,7 @@
 package es.uca.iw.fullstackwebapp.user.services;
 
+import es.uca.iw.fullstackwebapp.clase.Clase;
+import es.uca.iw.fullstackwebapp.reserva.EstadoReserva;
 import es.uca.iw.fullstackwebapp.user.domain.User;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -10,6 +12,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.net.InetAddress;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class EmailRealService implements EmailService {
@@ -66,14 +69,24 @@ public class EmailRealService implements EmailService {
     }
 
     // Método para enviar notificaciones de estado de la reserva
-    public boolean sendReservationStatusEmail(User user, String reservationStatus) {
+    @Override
+    public boolean sendReservationStatusEmail(User user, EstadoReserva estadoReserva, Clase clase) {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
 
+        // Definir el formato para la fecha y hora
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
         String subject = "Estado de su reserva";
         String body = "Estimado/a " + user.getUsername() + ",\n\n"
-                + "El estado de su reserva ha cambiado: " + reservationStatus + ".\n"
-                + "Gracias por utilizar nuestro servicio.";
+                + "El estado de su reserva es: " + estadoReserva.name() + ".\n\n"
+                + "Detalles de la clase:\n"
+                + "Nombre: " + clase.getName() + "\n"
+                + "Descripción: " + clase.getDescription() + "\n"
+                + "Horario: " + (clase.getHorario() != null ? clase.getHorario().format(formatter) : "No especificado") + "\n"
+                + "Capacidad: " + clase.getCapacidad() + "\n\n"
+                + "Gracias por utilizar nuestro servicio. ¡Nos vemos pronto!\n"
+                + "¡Saludos de todo el equipo de IwGymUca!";
 
         try {
             helper.setFrom(defaultMail);
@@ -88,6 +101,9 @@ public class EmailRealService implements EmailService {
 
         return true;
     }
+
+
+
 
     // Método para enviar recordatorios de clase
     public boolean sendClassReminderEmail(User user, String classDetails, String classDateTime) {

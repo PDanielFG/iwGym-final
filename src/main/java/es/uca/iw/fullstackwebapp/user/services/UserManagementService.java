@@ -1,5 +1,7 @@
 package es.uca.iw.fullstackwebapp.user.services;
 
+import es.uca.iw.fullstackwebapp.clase.Clase;
+import es.uca.iw.fullstackwebapp.reserva.EstadoReserva;
 import es.uca.iw.fullstackwebapp.user.domain.Role;
 import es.uca.iw.fullstackwebapp.user.domain.User;
 import es.uca.iw.fullstackwebapp.user.repositories.UserRepository;
@@ -50,8 +52,8 @@ public class UserManagementService implements UserDetailsService {
         }
     }
 
-    public void notifyReservationStatus(User user, String status) {
-        emailService.sendReservationStatusEmail(user, status);
+    public void notifyReservationStatus(User user, EstadoReserva estadoReserva, Clase clase) {
+        emailService.sendReservationStatusEmail(user, estadoReserva, clase);
     }
 
     public void sendClassReminder(User user, String classDetails, String classDateTime) {
