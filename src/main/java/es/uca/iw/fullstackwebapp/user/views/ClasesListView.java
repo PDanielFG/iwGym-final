@@ -14,6 +14,8 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import es.uca.iw.fullstackwebapp.clase.ClaseService;
 import es.uca.iw.fullstackwebapp.reserva.ReservaService;
+import es.uca.iw.fullstackwebapp.user.domain.User;
+import es.uca.iw.fullstackwebapp.user.services.EmailService;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -36,12 +38,14 @@ public class ClasesListView extends VerticalLayout {
 
     private ClaseService service;
     private ReservaService reservaService;
+    private EmailService emailService;
     private AuthenticatedUser authenticatedUser;
 
     @Autowired
-    public ClasesListView(ClaseService service, ReservaService reservaService, AuthenticatedUser authenticatedUser) {
+    public ClasesListView(ClaseService service, ReservaService reservaService, EmailService emailService, AuthenticatedUser authenticatedUser) {
         this.service = service;
         this.reservaService = reservaService;
+        this.emailService = emailService;
         this.authenticatedUser = authenticatedUser;
         addClassName("list-view");
         setSizeFull();
@@ -112,11 +116,17 @@ public class ClasesListView extends VerticalLayout {
 
     private void reservarClase(Clase clase) {
         // Obtener el usuario actual
-        String username = authenticatedUser.getUser().getUsername(); // Ajusta según tu implementación
+        User user = authenticatedUser.getUser(); // Ajusta según tu implementación
+        String username = user.getUsername();
 
         try {
             // Llamar al servicio de reserva para crear la reserva
             reservaService.reserve(username, clase);
+
+            // Enviar notificación por correo
+            String status = "Reservada";
+            emailService.sendReservationStatusEmail(user, status);
+
             // Actualizar la vista o mostrar un mensaje de éxito
             Notification.show("Clase reservada exitosamente");
         } catch (Exception e) {
