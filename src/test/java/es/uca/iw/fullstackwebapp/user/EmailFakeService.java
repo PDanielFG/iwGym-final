@@ -1,11 +1,15 @@
 package es.uca.iw.fullstackwebapp.user;
 
+import es.uca.iw.fullstackwebapp.reserva.Reserva;
 import es.uca.iw.fullstackwebapp.user.domain.User;
 import es.uca.iw.fullstackwebapp.user.services.EmailService;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import es.uca.iw.fullstackwebapp.reserva.EstadoReserva;
 import es.uca.iw.fullstackwebapp.clase.Clase;
+
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 
 @Service
@@ -101,6 +105,51 @@ public class EmailFakeService implements EmailService {
             return false;
         }
     }
+
+    @Override
+    public boolean sendReservationsEmail(User user, List<Reserva> reservas) {
+        // Asunto del correo
+        String subject = "Tus reservas";
+
+        // Construcción del cuerpo del correo
+        StringBuilder body = new StringBuilder();
+        body.append("Estimado/a ").append(user.getUsername()).append(",\n\n")
+                .append("Aquí están todas tus reservas:\n\n");
+
+        // Formateador de fecha para mostrar en formato dd/MM/yyyy HH:mm
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+        for (Reserva reserva : reservas) {
+            // Formatear la fecha y hora de la clase
+            String formattedDate = reserva.getClase().getHorario().format(formatter);
+
+            body.append("Clase: ").append(reserva.getClase().getName()).append("\n")
+                    .append("Descripción: ").append(reserva.getClase().getDescription()).append("\n")
+                    .append("Fecha y hora: ").append(formattedDate).append("\n")
+                    .append("Estado: ").append(reserva.getEstado()).append("\n\n");
+        }
+
+        body.append("¡Gracias por utilizar nuestro servicio!");
+
+        // Simulación del envío del correo
+        try {
+            System.out.println("From: app (testing)");
+            System.out.println("To: " + user.getEmail());
+            System.out.println("Subject: " + subject);
+            System.out.println("Body: " + body.toString());
+
+            // Simular un retraso en el envío del correo
+            int secondsToSleep = 5;
+            Thread.sleep(secondsToSleep * 1000);
+            System.out.println("Email send simulation done!");
+            return true;
+        } catch (InterruptedException ie) {
+            // Manejo de la interrupción del hilo
+            Thread.currentThread().interrupt();
+            return false;
+        }
+    }
+
 
 
 }

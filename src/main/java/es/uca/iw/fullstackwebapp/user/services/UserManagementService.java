@@ -52,14 +52,6 @@ public class UserManagementService implements UserDetailsService {
         }
     }
 
-    public void notifyReservationStatus(User user, EstadoReserva estadoReserva, Clase clase) {
-        emailService.sendReservationStatusEmail(user, estadoReserva, clase);
-    }
-
-    public void sendClassReminder(User user, String classDetails, String classDateTime) {
-        emailService.sendClassReminderEmail(user, classDetails, classDateTime);
-    }
-
 
     public User findByUsername(String username) {
         Optional<User> userOptional = userRepository.findByUsername(username);

@@ -2,6 +2,7 @@ package es.uca.iw.fullstackwebapp.user.services;
 
 import es.uca.iw.fullstackwebapp.clase.Clase;
 import es.uca.iw.fullstackwebapp.reserva.EstadoReserva;
+import es.uca.iw.fullstackwebapp.reserva.Reserva;
 import es.uca.iw.fullstackwebapp.user.domain.User;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.net.InetAddress;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 public class EmailRealService implements EmailService {
@@ -118,6 +120,44 @@ public class EmailRealService implements EmailService {
         } catch (MailException | MessagingException ex) {
             ex.printStackTrace();
             System.err.println("Error al enviar el correo: " + ex.getMessage());  // Mensaje de error
+            return false;
+        }
+    }
+
+
+    public boolean sendReservationsEmail(User user, List<Reserva> reservas) {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
+
+        String subject = "Tus reservas";
+        StringBuilder body = new StringBuilder();
+        body.append("Estimado/a ").append(user.getUsername()).append(",\n\n")
+                .append("Aquí están todas tus reservas:\n\n");
+
+        // Formateador de fecha para el formato dd/MM/yyyy HH:mm
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+        for (Reserva reserva : reservas) {
+            // Formatea la fecha y hora de la clase
+            String formattedDate = reserva.getClase().getHorario().format(formatter);
+
+            body.append("Clase: ").append(reserva.getClase().getName()).append("\n")
+                    .append("Descripción: ").append(reserva.getClase().getDescription()).append("\n")
+                    .append("Fecha y hora: ").append(formattedDate).append("\n")
+                    .append("Estado: ").append(reserva.getEstado()).append("\n\n");
+        }
+
+        body.append("¡Gracias por utilizar nuestro servicio!");
+
+        try {
+            helper.setFrom(defaultMail);
+            helper.setTo(user.getEmail());
+            helper.setSubject(subject);
+            helper.setText(body.toString());
+            mailSender.send(message);
+            return true;
+        } catch (MailException | MessagingException ex) {
+            ex.printStackTrace();
             return false;
         }
     }
