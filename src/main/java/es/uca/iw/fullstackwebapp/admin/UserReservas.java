@@ -50,6 +50,8 @@ public class UserReservas extends VerticalLayout implements BeforeEnterObserver 
         this.userService = userService;
         this.emailService = emailService;
 
+        addClassName("admin-view");
+
         // Configurar Grid
         grid.removeAllColumns();
         grid.addColumn(Reserva::getFechaReserva).setHeader("Fecha de Reserva").setSortable(true);

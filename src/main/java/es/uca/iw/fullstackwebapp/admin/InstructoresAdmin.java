@@ -39,7 +39,7 @@ public class InstructoresAdmin extends VerticalLayout {
     public InstructoresAdmin(InstructorService service, AuthenticatedUser authenticatedUser) {
         this.service = service;     //Me daba error porque lo tenia comentado. There was an exception while trying to navigate to '' with the root cause 'java.lang.NullPointerException:
         this.authenticatedUser = authenticatedUser;
-        addClassName("list-view");
+        addClassName("admin-view");
         setSizeFull();
         configureGrid();
         configureForm();

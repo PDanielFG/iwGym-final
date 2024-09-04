@@ -1,6 +1,7 @@
 package es.uca.iw.fullstackwebapp.admin;
 
 
+import com.vaadin.flow.component.dependency.CssImport;
 import es.uca.iw.fullstackwebapp.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -50,7 +51,7 @@ public class ClasesAdmin extends VerticalLayout {
         this.service = service;     //Me daba error porque lo tenia comentado. There was an exception while trying to navigate to '' with the root cause 'java.lang.NullPointerException:
         this.authenticatedUser = authenticatedUser;
         this.instructorService = instructorService;
-        addClassName("list-view");
+        addClassName("admin-view");
         setSizeFull();
         configureGrid();
         configureForm();

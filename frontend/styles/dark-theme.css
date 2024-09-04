@@ -1,0 +1,150 @@
+/* Archivo: dark-theme.css */
+
+.admin-view {
+    --lumo-base-color: #1e1e1e; /* Fondo principal */
+    --lumo-body-text-color: #e0e0e0; /* Color del texto principal */
+    --lumo-primary-color: #bb86fc; /* Color principal (botones, enlaces) */
+    --lumo-primary-text-color: #ffffff; /* Texto en botones primarios */
+    --lumo-secondary-text-color: #b0b0b0; /* Texto secundario */
+    --lumo-error-color: #cf6679; /* Color de error */
+    --lumo-border-radius: 0.5rem; /* Radio de bordes para componentes */
+    --lumo-box-shadow-s: 0 1px 3px 0 rgba(0, 0, 0, 0.5); /* Sombra leve */
+    --lumo-box-shadow-m: 0 4px 6px -1px rgba(0, 0, 0, 0.5); /* Sombra media */
+}
+
+/* Aplicar estilos específicos a los componentes dentro de .admin-view */
+.admin-view {
+    background-color: var(--lumo-base-color);
+    color: var(--lumo-body-text-color);
+    padding: 1rem;
+    border-radius: var(--lumo-border-radius);
+}
+
+/* Botones dentro de admin-view */
+.admin-view vaadin-button {
+    background-color: var(--lumo-primary-color);
+    color: var(--lumo-primary-text-color);
+    border-radius: var(--lumo-border-radius);
+    border: none;
+    box-shadow: var(--lumo-box-shadow-s);
+}
+
+.admin-view vaadin-button:hover {
+    background-color: #a066f2; /* Color en hover */
+}
+
+/* Campos de texto */
+.admin-view vaadin-text-field,
+.admin-view vaadin-password-field,
+.admin-view vaadin-text-area {
+    background-color: #333333;
+    color: var(--lumo-body-text-color);
+    border-radius: var(--lumo-border-radius);
+    border: 1px solid #444444;
+}
+
+/* Estilos específicos para vaadin-grid dentro de .admin-view */
+.admin-view vaadin-grid {
+    --lumo-base-color: #1e1e1e; /* Fondo de la tabla */
+    --lumo-body-text-color: #e0e0e0; /* Color del texto de la tabla */
+    --lumo-grid-row-background-color: #3a3a3a; /* Fondo de filas */
+    --lumo-grid-row-background-color-hover: #444444; /* Fondo de filas al pasar el ratón */
+    --lumo-primary-text-color: #ffffff; /* Color del texto principal */
+    --lumo-contrast-10pct: rgba(255, 255, 255, 0.1); /* Bordes de las filas */
+    --lumo-grid-border-color: rgba(255, 255, 255, 0.1); /* Bordes de la tabla */
+}
+
+/* Header del grid */
+.admin-view vaadin-grid::part(header-cell) {
+    background-color: #3a3a3a; /* Fondo más claro para el header */
+    color: #e0e0e0;
+    font-weight: bold;
+}
+
+/* Fondo de celdas */
+.admin-view vaadin-grid::part(body-cell) {
+    background-color: #3a3a3a; /* Mismo fondo claro que el header */
+    color: #e0e0e0; /* Color del texto */
+}
+
+/* Footer del grid */
+.admin-view vaadin-grid::part(footer-cell) {
+    background-color: #3a3a3a; /* Fondo más claro para el footer */
+    color: #b0b0b0;
+}
+
+/* Celda seleccionada */
+.admin-view vaadin-grid::part(row[selected]) {
+    background-color: #555555; /* Fondo distintivo para la celda seleccionada */
+}
+
+/* Barra de navegación lateral */
+.admin-view vaadin-app-layout {
+    --lumo-base-color: #1e1e1e; /* Fondo de la aplicación */
+}
+
+.admin-view vaadin-app-layout vaadin-drawer-toggle {
+    color: var(--lumo-primary-text-color); /* Color del icono del toggle */
+    background-color: #2c2c2c; /* Fondo del botón del toggle */
+}
+
+.admin-view vaadin-app-layout::part(nav) {
+    background-color: #555555; /* Fondo de la barra de navegación lateral */
+    color: var(--lumo-body-text-color); /* Color del texto en la barra de navegación lateral */
+}
+
+/* Barra de navegación superior */
+.admin-view vaadin-app-layout::part(header) {
+    background-color: #555555; /* Fondo de la barra de navegación superior */
+    color: var(--lumo-body-text-color); /* Color del texto en la barra de navegación superior */
+}
+
+/* Elementos de la barra de navegación */
+.admin-view vaadin-app-layout ::part(nav-item) {
+    color: var(--lumo-body-text-color); /* Color del texto de los elementos de navegación */
+    background-color: #333333; /* Fondo de los elementos de navegación */
+}
+
+/* Estilo de hover para elementos de navegación */
+.admin-view vaadin-app-layout ::part(nav-item:hover) {
+    background-color: #444444; /* Fondo de los elementos de navegación al pasar el ratón */
+}
+
+/* Notificaciones */
+.admin-view vaadin-notification-card {
+    background-color: #2e2e2e;
+    color: var(--lumo-body-text-color);
+    box-shadow: var(--lumo-box-shadow-m);
+}
+
+/* Enlaces */
+.admin-view a {
+    color: #bb86fc;
+    text-decoration: none;
+}
+
+.admin-view a:hover {
+    color: #d0a0ff;
+}
+
+/* Checkboxes y Radio Buttons */
+.admin-view vaadin-checkbox,
+.admin-view vaadin-radio-button {
+    --lumo-primary-color: #bb86fc;
+}
+
+/* Diálogos */
+.admin-view vaadin-dialog-overlay::part(content) {
+    background-color: #2c2c2c;
+    color: var(--lumo-body-text-color);
+}
+
+/* Elementos de barra de progreso */
+.admin-view vaadin-progress-bar {
+    --lumo-primary-color: #bb86fc;
+    --lumo-secondary-color: #3e3e3e;
+}
+
+.drawer-nav {
+    background-color: #2c2c2c; /* Fondo de la barra de navegación lateral */
+}

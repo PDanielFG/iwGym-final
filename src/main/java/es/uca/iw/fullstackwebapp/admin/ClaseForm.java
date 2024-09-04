@@ -39,7 +39,7 @@ public class ClaseForm extends FormLayout {
     Button close = new Button("Cancel");
 
     public ClaseForm() {
-        addClassName("clase-form");
+        addClassName("admin-view");
         binder.bindInstanceFields(this);
         add(name, description, horario, capacidad, instructor, createButtonsLayout());
     }
