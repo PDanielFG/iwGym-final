@@ -1,4 +1,4 @@
-package es.uca.iw.fullstackwebapp.clase;
+package es.uca.iw.fullstackwebapp.admin;
 
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -8,6 +8,7 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.shared.Registration;
+import es.uca.iw.fullstackwebapp.clase.Clase;
 import es.uca.iw.fullstackwebapp.instructor.Instructor;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -23,12 +24,7 @@ import java.util.List;
 
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 
-
-
-
-
-
-public class ClaseForm extends FormLayout{
+public class ClaseForm extends FormLayout {
     Binder<Clase> binder = new BeanValidationBinder<>(Clase.class);
 
     TextField name = new TextField("Name");
@@ -42,7 +38,7 @@ public class ClaseForm extends FormLayout{
     Button delete = new Button("Delete");
     Button close = new Button("Cancel");
 
-    public ClaseForm(){
+    public ClaseForm() {
         addClassName("clase-form");
         binder.bindInstanceFields(this);
         add(name, description, horario, capacidad, instructor, createButtonsLayout());
@@ -64,6 +60,7 @@ public class ClaseForm extends FormLayout{
         this.clase = clase;
         binder.readBean(clase);
     }
+
     public void setInstructors(List<Instructor> instructors) {
         instructor.setItems(instructors);
         instructor.setItemLabelGenerator(Instructor::getName);
@@ -81,43 +78,46 @@ public class ClaseForm extends FormLayout{
                 clase.setName(name.getValue());
                 clase.setDescription(description.getValue());
 
-                // Manejo del valor de horario, habia usado Datepicker por error en vez de DateTimePicker
+                // Validar horario
                 LocalDateTime selectedHorario = horario.getValue();
                 if (selectedHorario != null) {
-                    // Verifica si la fecha y hora seleccionada es menor que la actual
                     if (selectedHorario.isBefore(LocalDateTime.now())) {
                         Notification.show("El horario no puede ser anterior a la fecha y hora actual.", 3000, Notification.Position.MIDDLE);
-                        return; // Salir del método si la fecha es inválida
+                        return;
                     }
 
-                    // Verifica si la hora está dentro del rango permitido (8:00 AM a 11:00 PM)
                     LocalTime startTime = LocalTime.of(8, 0);
                     LocalTime endTime = LocalTime.of(23, 0);
                     LocalTime selectedTime = selectedHorario.toLocalTime();
 
                     if (selectedTime.isBefore(startTime) || selectedTime.isAfter(endTime)) {
                         Notification.show("La hora debe estar entre las 8:00 AM y las 11:00 PM.", 3000, Notification.Position.MIDDLE);
-                        return; // Salir del método si la hora no está en el rango permitido
+                        return;
                     }
 
                     clase.setHorario(selectedHorario);
                 } else {
-                    // Manejar el caso en que no se selecciona ninguna fecha y hora
                     Notification.show("El campo 'Horario' es obligatorio.", 3000, Notification.Position.MIDDLE);
-                    return; // Salir del método si el horario no es válido
+                    return;
                 }
 
-                // Manejo del valor de capacidad
+                // Validar capacidad
                 try {
                     int capacidadValue = Integer.parseInt(capacidad.getValue());
                     if (capacidadValue < 5) {
                         Notification.show("La capacidad mínima de la clase es de 5 personas.", 3000, Notification.Position.MIDDLE);
-                        return; // Salir del método si la capacidad es menor a 5
+                        return;
                     }
                     clase.setCapacidad(capacidadValue);
                 } catch (NumberFormatException e) {
                     Notification.show("La capacidad debe ser un número entero válido.", 3000, Notification.Position.MIDDLE);
-                    return; // Salir del método si la capacidad no es válida
+                    return;
+                }
+
+                // Validar que se haya seleccionado un instructor
+                if (instructor.getValue() == null) {
+                    Notification.show("Es obligatorio asignar un instructor a la clase.", 3000, Notification.Position.MIDDLE);
+                    return;
                 }
                 clase.setInstructor(instructor.getValue());
 
@@ -127,6 +127,7 @@ public class ClaseForm extends FormLayout{
         }
     }
 
+    // Eventos y registro de listeners se mantienen igual
     public static abstract class ClaseFormEvent extends ComponentEvent<ClaseForm> {
         private Clase clase;
 
@@ -139,7 +140,6 @@ public class ClaseForm extends FormLayout{
             return clase;
         }
     }
-
 
     public static class SaveEvent extends ClaseFormEvent {
         SaveEvent(ClaseForm source, Clase clase) {
@@ -170,8 +170,4 @@ public class ClaseForm extends FormLayout{
     public <T extends ComponentEvent<?>> Registration addCloseListener(ComponentEventListener<T> listener) {
         return addListener(CloseEvent.class, (ComponentEventListener) listener);
     }
-
 }
-
-
-

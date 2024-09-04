@@ -12,7 +12,7 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import es.uca.iw.fullstackwebapp.clase.ClaseForm;
+import es.uca.iw.fullstackwebapp.admin.ClaseForm;
 import es.uca.iw.fullstackwebapp.clase.ClaseService;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.context.annotation.Scope;
