@@ -6,6 +6,7 @@ import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.sidenav.SideNav;
@@ -15,8 +16,6 @@ import com.vaadin.flow.server.auth.AccessAnnotationChecker;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import es.uca.iw.fullstackwebapp.admin.ClasesAdmin;
 import es.uca.iw.fullstackwebapp.admin.InstructoresAdmin;
-import es.uca.iw.fullstackwebapp.book.BookListView;
-import es.uca.iw.fullstackwebapp.book.BookManagementView;
 import es.uca.iw.fullstackwebapp.user.domain.User;
 import es.uca.iw.fullstackwebapp.user.security.AuthenticatedUser;
 import es.uca.iw.fullstackwebapp.user.views.ClasesListView;
@@ -58,7 +57,7 @@ public class MainLayout extends AppLayout {
     }
 
     private void addDrawerContent() {
-        H1 appName = new H1("My App");
+        H1 appName = new H1("IwGymUca");
         appName.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
         Header header = new Header(appName);
 
@@ -70,32 +69,34 @@ public class MainLayout extends AppLayout {
     private SideNav createNavigation() {
         SideNav nav = new SideNav();
 
+        // Agregar elementos visibles para todos los usuarios
         if (accessChecker.hasAccess(UserHomeView.class)) {
             nav.addItem(new SideNavItem("Home", UserHomeView.class, LineAwesomeIcon.HOME_SOLID.create()));
         }
 
-        if (accessChecker.hasAccess(BookListView.class)) {
-            nav.addItem(new SideNavItem("Clases Disponibles", ClasesListView.class, LineAwesomeIcon.BOOK_DEAD_SOLID.create()));
-        }
-        if (accessChecker.hasAccess(ReservaListView.class)) {
-            nav.addItem(new SideNavItem("Mis Reservas", ReservaListView.class, LineAwesomeIcon.BOOK_DEAD_SOLID.create()));
+        if (accessChecker.hasAccess(ClasesListView.class)) {
+            nav.addItem(new SideNavItem("Clases Disponibles", ClasesListView.class, VaadinIcon.EXIT.create()));
         }
 
-        if (accessChecker.hasAccess(BookManagementView.class)) {
-            nav.addItem(new SideNavItem("Book Management", BookManagementView.class, LineAwesomeIcon.BOOK_DEAD_SOLID.create()));
+        if (accessChecker.hasAccess(ReservaListView.class)) {
+            nav.addItem(new SideNavItem("Mis Reservas", ReservaListView.class, VaadinIcon.OPEN_BOOK.create()));
         }
-        if (accessChecker.hasAccess(ClasesAdmin.class)) {
+
+        // Verificar si el usuario es admin y agregar elementos de administración si es necesario
+        Optional<User> maybeUser = authenticatedUser.get();
+        if (maybeUser.isPresent() && accessChecker.hasAccess(ClasesAdmin.class)) {
             nav.addItem(new SideNavItem("ADMIN. Clases", ClasesAdmin.class, LineAwesomeIcon.USER_SHIELD_SOLID.create()));
         }
-        if (accessChecker.hasAccess(InstructoresAdmin.class)) {
+        if (maybeUser.isPresent() && accessChecker.hasAccess(InstructoresAdmin.class)) {
             nav.addItem(new SideNavItem("ADMIN. Instructores", InstructoresAdmin.class, LineAwesomeIcon.USER_SHIELD_SOLID.create()));
         }
-       if (accessChecker.hasAccess(ReservaAdmin.class)) {
+        if (maybeUser.isPresent() && accessChecker.hasAccess(ReservaAdmin.class)) {
             nav.addItem(new SideNavItem("ADMIN. Reservas", ReservaAdmin.class, LineAwesomeIcon.USER_SHIELD_SOLID.create()));
         }
 
         return nav;
     }
+
 
     private Footer createFooter() {
         Footer layout = new Footer();

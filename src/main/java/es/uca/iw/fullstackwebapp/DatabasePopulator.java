@@ -1,8 +1,6 @@
 package es.uca.iw.fullstackwebapp;
 
 import com.github.javafaker.Faker;
-import es.uca.iw.fullstackwebapp.book.Book;
-import es.uca.iw.fullstackwebapp.book.BookService;
 import es.uca.iw.fullstackwebapp.user.domain.Role;
 import es.uca.iw.fullstackwebapp.user.domain.User;
 import es.uca.iw.fullstackwebapp.user.services.UserManagementService;
@@ -12,12 +10,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class DatabasePopulator implements CommandLineRunner {
 
-    BookService bookService;
-
     UserManagementService userService;
 
-    public DatabasePopulator(BookService bookService, UserManagementService userService) {
-        this.bookService = bookService;
+    public DatabasePopulator(UserManagementService userService) {
         this.userService = userService;
     }
 
@@ -47,21 +42,6 @@ public class DatabasePopulator implements CommandLineRunner {
             System.out.println("User created");
 
         }
-        // Creamos libros si no hay ninguno
-        if (bookService.count() == 0) {
-            for (int i = 1; i < 50; i++) {
-                Book book = new Book();
-                book.setTitle(faker.book().title());
-                book.setPublisher(faker.book().publisher());
-                book.setAuthor(faker.book().author());
-                bookService.createBook(book);
-                System.out.println("Book created");
-            }
-
-        }
-
 
     }
-
-
 }
