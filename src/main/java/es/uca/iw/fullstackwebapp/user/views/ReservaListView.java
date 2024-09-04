@@ -13,12 +13,15 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import es.uca.iw.fullstackwebapp.MainLayout;
 import es.uca.iw.fullstackwebapp.reserva.Reserva;
 import es.uca.iw.fullstackwebapp.reserva.ReservaService;
+import es.uca.iw.fullstackwebapp.user.domain.User;
 import es.uca.iw.fullstackwebapp.user.security.AuthenticatedUser;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import java.util.List;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
+
 import es.uca.iw.fullstackwebapp.clase.Clase;
 import com.vaadin.flow.component.textfield.TextField;
 
@@ -93,24 +96,20 @@ public class ReservaListView extends VerticalLayout {
     }*/
 
     private void updateList() {
-        // Obtener todas las reservas
-        List<Reserva> todasLasReservas = reservaService.findAll();
-        todasLasReservas.forEach(reserva -> System.out.println("Reserva ID: " + reserva.getId() + ", Estado: " + reserva.getEstado()));
-        grid.setItems(todasLasReservas);
+        // Obtener el usuario autenticado
+        Optional<User> currentUserOpt = authenticatedUser.get();
 
-        // Obtener el texto del filtro
-        //String filtro = filterText.getValue().trim().toLowerCase();
+        if (currentUserOpt.isPresent()) {
+            es.uca.iw.fullstackwebapp.user.domain.User currentUser = currentUserOpt.get();
+            // Obtener las reservas del usuario autenticado
+            List<Reserva> reservasDelUsuario = reservaService.getReservasPorUsuario(currentUser);
 
-        // Filtrar las clases por nombre o descripción
-        /*
-        Las reservas asi no tienen nombre propio, de momento lo quitamos
-        List<Clase> clasesFiltradas = todasLasReservas.stream()
-                .filter(reserva -> reserva.getName().toLowerCase().contains(filtro) ||
-                        clase.getDescription().toLowerCase().contains(filtro))
-                .collect(Collectors.toList());
-
-        // Actualizar el grid con las clases filtradas
-        grid.setItems(clasesFiltradas);*/
+            // Resetting the grid's items explicitly with the correct class type
+            grid.setItems(reservasDelUsuario.stream().map(Reserva.class::cast).toList());
+        } else {
+            // Mostrar una notificación si no hay un usuario autenticado (caso muy raro)
+            Notification.show("No se encontró el usuario autenticado.", 3000, Notification.Position.MIDDLE);
+        }
     }
 
 }
