@@ -1,5 +1,7 @@
 package es.uca.iw.fullstackwebapp.user.services;
 
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.notification.Notification;
 import es.uca.iw.fullstackwebapp.clase.Clase;
 import es.uca.iw.fullstackwebapp.reserva.EstadoReserva;
 import es.uca.iw.fullstackwebapp.reserva.Reserva;
@@ -126,6 +128,22 @@ public class EmailRealService implements EmailService {
 
 
     public boolean sendReservationsEmail(User user, List<Reserva> reservas) {
+        // Verificar si hay reservas; si no hay, mostrar notificación y no enviar el correo
+        if (reservas == null || reservas.isEmpty()) {
+            // Asegúrate de que la notificación se muestre en el hilo de UI
+            UI currentUI = UI.getCurrent();
+            if (currentUI != null) {
+                currentUI.access(() -> {
+                    Notification.show("No hay reservas para enviar", 3000, Notification.Position.MIDDLE);
+                });
+            } else {
+                // Si no hay un contexto de UI, podrías registrar un log o manejarlo de otra manera.
+                System.out.println("No hay reservas para enviar y no hay UI disponible.");
+            }
+            return false; // Retornar false si no hay reservas
+        }
+
+        // Crear el mensaje de correo
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
 
@@ -155,12 +173,14 @@ public class EmailRealService implements EmailService {
             helper.setSubject(subject);
             helper.setText(body.toString());
             mailSender.send(message);
-            return true;
+            return true; // Retornar true si el correo se envía correctamente
         } catch (MailException | MessagingException ex) {
             ex.printStackTrace();
-            return false;
+            return false; // Retornar false si ocurre algún error
         }
     }
+
+
 
 
     public boolean sendClassReminderEmail(User user, String classDetails, String classDateTime) {
