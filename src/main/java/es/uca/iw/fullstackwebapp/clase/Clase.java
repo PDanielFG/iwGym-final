@@ -20,7 +20,7 @@ public class Clase {
     private int capacidad;
 
     @ManyToOne
-    @JoinColumn(name = "clase_id")
+    @JoinColumn(name = "instructor")
     private Instructor instructor;
 
     //la parte de manyToOne debe de llamarse el atributo igual que en oneToMany

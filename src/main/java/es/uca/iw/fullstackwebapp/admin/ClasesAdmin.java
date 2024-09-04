@@ -38,6 +38,7 @@ import es.uca.iw.fullstackwebapp.instructor.InstructorService;
 @RolesAllowed("ADMIN")
 @Route(value = "clasesAdmin", layout = MainLayout.class)
 @PageTitle("Clases Admin.")
+@CssImport("./styles/dark-theme.css")
 public class ClasesAdmin extends VerticalLayout {
     Grid<Clase> grid = new Grid<>(Clase.class);
     TextField filterText = new TextField();
