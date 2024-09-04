@@ -41,6 +41,15 @@
     color: var(--lumo-body-text-color);
     border-radius: var(--lumo-border-radius);
     border: 1px solid #444444;
+    outline: none;
+    box-shadow: none;
+}
+
+.admin-view vaadin-text-field:focus,
+.admin-view vaadin-password-field:focus,
+.admin-view vaadin-text-area:focus {
+    border: 1px solid #444444; /* Mantiene el borde del campo al enfocarse */
+    box-shadow: none; /* Asegúrate de que no haya sombra aplicada al enfoque */
 }
 
 /* Estilos específicos para vaadin-grid dentro de .admin-view */
@@ -147,4 +156,50 @@
 
 .drawer-nav {
     background-color: #2c2c2c; /* Fondo de la barra de navegación lateral */
+}
+
+/* Estilos para vaadin-date-picker */
+.admin-view vaadin-date-picker {
+    background-color: #333333; /* Fondo del campo de fecha */
+    color: var(--lumo-body-text-color); /* Color del texto del campo de fecha */
+    border-radius: var(--lumo-border-radius);
+    border: 1px solid #444444; /* Borde del campo de fecha */
+    box-shadow: none; /* Sin sombra para el campo */
+}
+
+/* Estilo del calendario dentro del vaadin-date-picker */
+.admin-view vaadin-date-picker::part(calendar) {
+    background-color: #333333; /* Fondo del calendario */
+    color: var(--lumo-body-text-color); /* Color del texto del calendario */
+}
+
+/* Estilo de los días en el calendario */
+.admin-view vaadin-date-picker::part(day) {
+    background-color: #444444; /* Fondo de los días */
+    color: var(--lumo-body-text-color); /* Color del texto de los días */
+}
+
+/* Fondo de los días seleccionados */
+.admin-view vaadin-date-picker::part(day[selected]) {
+    background-color: #bb86fc; /* Fondo del día seleccionado */
+    color: var(--lumo-primary-text-color); /* Color del texto del día seleccionado */
+}
+
+/* Estilo del ícono del calendario */
+.admin-view vaadin-date-picker::part(toggle-button) {
+    color: var(--lumo-body-text-color); /* Color del ícono del calendario */
+}
+
+/* Estilos para vaadin-time-picker */
+.admin-view vaadin-time-picker {
+    background-color: #333333; /* Fondo del campo de hora */
+    color: var(--lumo-body-text-color); /* Color del texto del campo de hora */
+    border-radius: var(--lumo-border-radius);
+    border: 1px solid #444444; /* Borde del campo de hora */
+    box-shadow: none; /* Sin sombra para el campo */
+}
+
+/* Estilo del ícono de la hora dentro del vaadin-time-picker */
+.admin-view vaadin-time-picker::part(toggle-button) {
+    color: var(--lumo-body-text-color); /* Color del ícono de la hora */
 }
