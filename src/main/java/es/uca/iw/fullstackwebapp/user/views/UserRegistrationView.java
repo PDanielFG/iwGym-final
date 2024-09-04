@@ -94,7 +94,7 @@ public class UserRegistrationView extends VerticalLayout {
                 binder.setBean(new User());
                 password2.setValue("");
             } else {
-                Notification.show("Please, the email is already in use");
+                Notification.show("Please, the email or username is already in use");
 
             }
 
