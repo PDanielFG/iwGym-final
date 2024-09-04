@@ -3,6 +3,7 @@ package es.uca.iw.fullstackwebapp.user.views;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -47,7 +48,16 @@ public class ReservaListView extends VerticalLayout {
         setSizeFull();
         configureGrid();
 
-        add(grid);
+
+        // Crear y configurar el VerticalLayout para el encabezado
+        VerticalLayout headerLayout = new VerticalLayout();
+        headerLayout.setAlignItems(Alignment.CENTER);
+        headerLayout.setJustifyContentMode(JustifyContentMode.CENTER);
+
+        H1 title = new H1("Tus reservas, "+authenticatedUser.get().get().getUsername());
+        headerLayout.add(title);
+
+        add(headerLayout, grid);
         updateList();
     }
 
