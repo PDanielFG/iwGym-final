@@ -61,8 +61,8 @@ public class ClasesListView extends VerticalLayout {
         grid.addClassNames("clase-grid");
         grid.setSizeFull();
 
-        grid.addColumn(Clase::getName).setHeader("Nombre");
-        grid.addColumn(Clase::getDescription).setHeader("Descripción");
+        grid.addColumn(Clase::getName).setHeader("Nombre").setSortable(true);
+        grid.addColumn(Clase::getDescription).setHeader("Descripción").setSortable(true);
         grid.addColumn(clase -> {
             if (clase.getHorario() != null) {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
@@ -70,13 +70,13 @@ public class ClasesListView extends VerticalLayout {
             } else {
                 return "";
             }
-        }).setHeader("Horario");
-        grid.addColumn(Clase::getCapacidad).setHeader("Capacidad");
+        }).setHeader("Horario").setSortable(true);
+        grid.addColumn(Clase::getCapacidad).setHeader("Capacidad").setSortable(true);
 
         grid.addColumn(clase -> {
             Instructor instructor = clase.getInstructor();
             return instructor != null ? instructor.getName() + " " + instructor.getApellidos() : "";
-        }).setHeader("Instructor");
+        }).setHeader("Instructor").setSortable(true);
 
         grid.addComponentColumn(clase -> {
             Button reserveButton = new Button("Reservar");

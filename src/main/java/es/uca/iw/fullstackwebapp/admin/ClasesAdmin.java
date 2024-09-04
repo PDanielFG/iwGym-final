@@ -21,6 +21,8 @@ import java.time.format.DateTimeFormatter;
 import es.uca.iw.fullstackwebapp.user.security.AuthenticatedUser;
 import es.uca.iw.fullstackwebapp.clase.Clase;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import es.uca.iw.fullstackwebapp.instructor.Instructor;
 import es.uca.iw.fullstackwebapp.instructor.InstructorService;
 
@@ -97,8 +99,10 @@ public class ClasesAdmin extends VerticalLayout {
         grid.removeAllColumns(); //me fallabapor esto
         grid.addClassNames("clase-grid");
         grid.setSizeFull();
-        grid.addColumn(Clase::getName).setHeader("Nombre");
-        grid.addColumn(Clase::getDescription).setHeader("Descripción");
+
+
+        grid.addColumn(Clase::getName).setHeader("Nombre").setSortable(true);
+        grid.addColumn(Clase::getDescription).setHeader("Descripción").setSortable(true);
         grid.addColumn(clase -> {
             if (clase.getHorario() != null) {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
@@ -106,13 +110,15 @@ public class ClasesAdmin extends VerticalLayout {
             } else {
                 return ""; // Retorna una cadena vacía si el valor es null
             }
-        }).setHeader("Horario");        grid.addColumn(Clase::getCapacidad).setHeader("Capacidad");
+        }).setHeader("Horario").setSortable(true);
+
+        grid.addColumn(Clase::getCapacidad).setHeader("Capacidad").setSortable(true);
 
         // Configurar la columna para mostrar el nombre completo del instructor
         grid.addColumn(clase -> {
             Instructor instructor = clase.getInstructor();
             return instructor != null ? instructor.getName() + " " + instructor.getApellidos() : ""; // Concatenar nombre y apellidos
-        }).setHeader("Instructor");
+        }).setHeader("Instructor").setSortable(true);
 
 
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
@@ -122,7 +128,7 @@ public class ClasesAdmin extends VerticalLayout {
     }
 
     private Component getToolbar() {
-        filterText.setPlaceholder("Filter by name or nickname...");
+        filterText.setPlaceholder("Fitrar por nombre o descripcion...");
         filterText.setClearButtonVisible(true);
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
         filterText.addValueChangeListener(e -> updateList());
@@ -134,6 +140,8 @@ public class ClasesAdmin extends VerticalLayout {
         toolbar.addClassName("toolbar");
         return toolbar;
     }
+
+
 
     public void editClase(Clase clase) {
         if (clase == null) {
@@ -162,7 +170,16 @@ public class ClasesAdmin extends VerticalLayout {
         // Obtener todas las clases sin filtrar por usuario logueado
         List<Clase> todasLasClases = service.findAll(); // Asegúrate de que este método devuelva todas las clases
 
+        // Obtener el texto del filtro
+        String filtro = filterText.getValue().trim().toLowerCase();
+
+        // Filtrar las clases por nombre o descripción
+        List<Clase> clasesFiltradas = todasLasClases.stream()
+                .filter(clase -> clase.getName().toLowerCase().contains(filtro) ||
+                        clase.getDescription().toLowerCase().contains(filtro))
+                .collect(Collectors.toList());
+
         // Actualizar el grid con todas las clases obtenidas
-        grid.setItems(todasLasClases);
+        grid.setItems(clasesFiltradas);
     }
 }

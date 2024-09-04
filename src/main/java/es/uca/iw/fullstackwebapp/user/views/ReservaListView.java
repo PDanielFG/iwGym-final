@@ -57,7 +57,7 @@ public class ReservaListView extends VerticalLayout {
         H1 title = new H1("Tus reservas, "+authenticatedUser.get().get().getUsername());
         headerLayout.add(title);
 
-        add(headerLayout, grid);
+        add(headerLayout, getToolbar(), grid);
         updateList();
     }
 
@@ -73,11 +73,11 @@ public class ReservaListView extends VerticalLayout {
         grid.addColumn(reserva -> {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
             return reserva.getFechaReserva().format(formatter);
-        }).setHeader("Fecha de Reserva");
+        }).setHeader("Fecha de Reserva").setSortable(true);
 
         //clase asociada al clase_id
         grid.addColumn(reserva -> reserva.getClase().getName())
-                .setHeader("Clase");
+                .setHeader("Clase").setSortable(true);
 
         //Instructor de la clase
         grid.addColumn(reserva -> {
@@ -85,17 +85,17 @@ public class ReservaListView extends VerticalLayout {
             return clase.getInstructor() != null
                     ? clase.getInstructor().getName() + " " + clase.getInstructor().getApellidos()
                     : "";
-        }).setHeader("Instructor");
+        }).setHeader("Instructor").setSortable(true);
 
         //Estado de la reserva
-        grid.addColumn(reserva -> reserva.getEstado()).setHeader("Estado");
+        grid.addColumn(reserva -> reserva.getEstado()).setHeader("Estado").setSortable(true);
 
 
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
     }
 
-    /*private Component getToolbar() {
-        filterText.setPlaceholder("Filtrar por nombre o descripción...");
+    private Component getToolbar() {
+        filterText.setPlaceholder("Filtrar por clase o instructor...");
         filterText.setClearButtonVisible(true);
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
         filterText.addValueChangeListener(e -> updateList());
@@ -103,23 +103,37 @@ public class ReservaListView extends VerticalLayout {
         var toolbar = new HorizontalLayout(filterText);
         toolbar.addClassName("toolbar");
         return toolbar;
-    }*/
+    }
 
     private void updateList() {
         // Obtener el usuario autenticado
         Optional<User> currentUserOpt = authenticatedUser.get();
 
         if (currentUserOpt.isPresent()) {
-            es.uca.iw.fullstackwebapp.user.domain.User currentUser = currentUserOpt.get();
+            User currentUser = currentUserOpt.get();
             // Obtener las reservas del usuario autenticado
             List<Reserva> reservasDelUsuario = reservaService.getReservasPorUsuario(currentUser);
 
-            // Resetting the grid's items explicitly with the correct class type
-            grid.setItems(reservasDelUsuario.stream().map(Reserva.class::cast).toList());
+            // Obtener el texto del filtro
+            String filtro = filterText.getValue().trim().toLowerCase();
+
+            // Filtrar las reservas basadas en el texto del filtro
+            List<Reserva> reservasFiltradas = reservasDelUsuario.stream()
+                    .filter(reserva -> reserva.getClase().getName().toLowerCase().contains(filtro) ||
+                            (reserva.getClase().getInstructor() != null &&
+                                    (reserva.getClase().getInstructor().getName().toLowerCase() + " " +
+                                            reserva.getClase().getInstructor().getApellidos().toLowerCase())
+                                            .contains(filtro)) ||
+                            reserva.getEstado().toString().toLowerCase().contains(filtro))
+                    .toList();
+
+            // Actualizar el grid con las reservas filtradas
+            grid.setItems(reservasFiltradas);
         } else {
             // Mostrar una notificación si no hay un usuario autenticado (caso muy raro)
             Notification.show("No se encontró el usuario autenticado.", 3000, Notification.Position.MIDDLE);
         }
     }
+
 
 }

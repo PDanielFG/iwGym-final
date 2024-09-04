@@ -9,6 +9,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import es.uca.iw.fullstackwebapp.MainLayout;
+import es.uca.iw.fullstackwebapp.clase.Clase;
 import es.uca.iw.fullstackwebapp.user.domain.User;
 import es.uca.iw.fullstackwebapp.user.security.AuthenticatedUser;
 import es.uca.iw.fullstackwebapp.user.services.UserManagementService;
@@ -22,6 +23,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import es.uca.iw.fullstackwebapp.reserva.Reserva;
 
 
@@ -69,9 +72,9 @@ public class ReservaAdmin extends VerticalLayout {
         grid.setSizeFull();
         grid.setSelectionMode(Grid.SelectionMode.SINGLE);
 
-        grid.addColumn(User::getUsername).setHeader("Nombre de usuario");
-        grid.addColumn(User::getEmail).setHeader("Correo electrónico");
-        grid.addColumn(user -> user.getReservas().size()).setHeader("Número de reservas");
+        grid.addColumn(User::getUsername).setHeader("Nombre de usuario").setSortable(true);
+        grid.addColumn(User::getEmail).setHeader("Correo electrónico").setSortable(true);
+        grid.addColumn(user -> user.getReservas().size()).setHeader("Número de reservas").setSortable(true);
 
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
@@ -88,7 +91,7 @@ public class ReservaAdmin extends VerticalLayout {
 
 
     private Component getToolbar() {
-        filterText.setPlaceholder("Filter by name or nickname...");
+        filterText.setPlaceholder("Filtrar por nombre usuario...");
         filterText.setClearButtonVisible(true);
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
         filterText.addValueChangeListener(e -> updateList());
@@ -103,9 +106,18 @@ public class ReservaAdmin extends VerticalLayout {
     //de filtrar por usuario
     private void updateList() {
         // Obtener todas los instructores totales
-        List<User> todosInstructores = service.findAll(); // Asegúrate de que este método devuelva todas las clases
+        List<User> todasReservas = service.findAll(); // Asegúrate de que este método devuelva todas las clases
+
+       // Obtener el texto del filtro
+        String filtro = filterText.getValue().trim().toLowerCase();
+
+        // Filtrar las clases por nombre o descripción
+        List<User> userFiltrados = todasReservas.stream()
+                .filter(clase -> clase.getUsername().toLowerCase().contains(filtro))
+                .collect(Collectors.toList());
 
         // Actualizar el grid con todas las clases obtenidas
-        grid.setItems(todosInstructores);
+        grid.setItems(userFiltrados);
+
     }
 }

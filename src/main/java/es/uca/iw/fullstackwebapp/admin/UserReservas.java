@@ -52,15 +52,15 @@ public class UserReservas extends VerticalLayout implements BeforeEnterObserver 
 
         // Configurar Grid
         grid.removeAllColumns();
-        grid.addColumn(Reserva::getFechaReserva).setHeader("Fecha de Reserva");
-        grid.addColumn(reserva -> reserva.getClase().getName()).setHeader("Clase");
+        grid.addColumn(Reserva::getFechaReserva).setHeader("Fecha de Reserva").setSortable(true);
+        grid.addColumn(reserva -> reserva.getClase().getName()).setHeader("Clase").setSortable(true);
         grid.addColumn(reserva -> {
             Clase clase = reserva.getClase();
             return clase.getInstructor() != null
                     ? clase.getInstructor().getName() + " " + clase.getInstructor().getApellidos()
                     : "";
-        }).setHeader("Instructor");
-        grid.addColumn(reserva -> reserva.getUsuario().getUsername()).setHeader("Usuario");
+        }).setHeader("Instructor").setSortable(true);
+        grid.addColumn(reserva -> reserva.getUsuario().getUsername()).setHeader("Usuario").setSortable(true);
 
         // Configuración del ComboBox para el estado
         ComboBox<EstadoReserva> estadoComboBox = new ComboBox<>();
@@ -74,7 +74,7 @@ public class UserReservas extends VerticalLayout implements BeforeEnterObserver 
 
         Grid.Column<Reserva> estadoColumn = grid.addColumn(Reserva::getEstado)
                 .setHeader("Estado")
-                .setEditorComponent(estadoComboBox);
+                .setEditorComponent(estadoComboBox).setSortable(true);
 
         // Configuración del botón de guardar
         saveButton.addClickListener(e -> saveChanges());

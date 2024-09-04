@@ -12,12 +12,14 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import es.uca.iw.fullstackwebapp.MainLayout;
+import es.uca.iw.fullstackwebapp.clase.Clase;
 import es.uca.iw.fullstackwebapp.instructor.InstructorService;
 import es.uca.iw.fullstackwebapp.user.security.AuthenticatedUser;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.context.annotation.Scope;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import es.uca.iw.fullstackwebapp.instructor.Instructor;
 import es.uca.iw.fullstackwebapp.instructor.InstructorForm;
@@ -83,9 +85,9 @@ public class InstructoresAdmin extends VerticalLayout {
 
         //uso de formateadores, por eso uso el metodo addcolumn
         grid.addColumn(instructor -> instructor.getName() + " " + instructor.getApellidos())
-                .setHeader("Nombre Completo");
-        grid.addColumn(Instructor::getCorreo).setHeader("Correo electrónico");
-        grid.addColumn(Instructor::getTelefono).setHeader("Número de teléfono");
+                .setHeader("Nombre Completo").setSortable(true);
+        grid.addColumn(Instructor::getCorreo).setHeader("Correo electrónico").setSortable(true);
+        grid.addColumn(Instructor::getTelefono).setHeader("Número de teléfono").setSortable(true);
       //  grid.addColumn(Instructor::getClases).setHeader("Clases");  //Añadimos las clases a las que esta acosiado, pero no la metemos en el form de antes logicamente
 
 
@@ -97,7 +99,7 @@ public class InstructoresAdmin extends VerticalLayout {
     }
 
     private Component getToolbar() {
-        filterText.setPlaceholder("Filter by name or nickname...");
+        filterText.setPlaceholder("Filtrar por nombre o apellidos...");
         filterText.setClearButtonVisible(true);
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
         filterText.addValueChangeListener(e -> updateList());
@@ -137,7 +139,17 @@ public class InstructoresAdmin extends VerticalLayout {
         // Obtener todas los instructores totales
         List<Instructor> todosInstructores = service.findAll(); // Asegúrate de que este método devuelva todas las clases
 
+        // Obtener el texto del filtro
+        String filtro = filterText.getValue().trim().toLowerCase();
+
+        // Filtrar las clases por nombre o descripción
+        List<Instructor> instructoresFiltrados = todosInstructores.stream()
+                .filter(instruc -> instruc.getName().toLowerCase().contains(filtro) ||
+                        instruc.getApellidos().toLowerCase().contains(filtro))
+                .collect(Collectors.toList());
+
         // Actualizar el grid con todas las clases obtenidas
-        grid.setItems(todosInstructores);
+        grid.setItems(instructoresFiltrados);
+
     }
 }
