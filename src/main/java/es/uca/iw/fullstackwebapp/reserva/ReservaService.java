@@ -1,9 +1,10 @@
 package es.uca.iw.fullstackwebapp.reserva;
 
 import es.uca.iw.fullstackwebapp.clase.Clase;
-import org.springframework.stereotype.Service;
+import es.uca.iw.fullstackwebapp.clase.ClaseService; // Importa el servicio de clase
 import es.uca.iw.fullstackwebapp.user.domain.User;
 import es.uca.iw.fullstackwebapp.user.services.UserManagementService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,10 +14,12 @@ public class ReservaService {
 
     private ReservaRespoitory reservaRepository;
     private UserManagementService userService;
+    private ClaseService claseService; // Agrega ClaseService como dependencia
 
-    public ReservaService(ReservaRespoitory reservaRepository, UserManagementService userService) {
+    public ReservaService(ReservaRespoitory reservaRepository, UserManagementService userService, ClaseService claseService) {
         this.reservaRepository = reservaRepository;
         this.userService = userService;
+        this.claseService = claseService; // Inicializa ClaseService
     }
 
     public Optional<Reserva> findById(Long id) {
@@ -40,11 +43,19 @@ public class ReservaService {
             throw new IllegalArgumentException("Usuario no encontrado");
         }
 
+        // Verificar si hay capacidad disponible en la clase
+        if (clase.getCapacidad() <= 0) {
+            throw new IllegalStateException("No hay capacidad disponible en esta clase.");
+        }
+
         // Crear una nueva reserva
         Reserva reserva = new Reserva(usuario, clase, EstadoReserva.PENDIENTE);
 
         // Guardar la reserva en la base de datos
         reservaRepository.save(reserva);
+
+        // Disminuir la capacidad de la clase usando el servicio de clase
+        claseService.reducirCapacidad(clase);
     }
 
     public List<Reserva> findAll() {

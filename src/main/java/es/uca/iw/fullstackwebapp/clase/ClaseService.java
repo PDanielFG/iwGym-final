@@ -1,34 +1,36 @@
 package es.uca.iw.fullstackwebapp.clase;
 
-
 import org.springframework.stereotype.Service;
-import es.uca.iw.fullstackwebapp.clase.ClaseRepository;
-import org.springframework.transaction.annotation.Transactional;
-import es.uca.iw.fullstackwebapp.instructor.Instructor;
 
 import java.util.List;
 
 @Service
 public class ClaseService {
-    private final ClaseRepository claseRepository;
+    private ClaseRepository claseRepository;
 
     public ClaseService(ClaseRepository claseRepository) {
         this.claseRepository = claseRepository;
     }
 
-    @Transactional
-    public void saveClase(Clase clase) {
-        if (clase.getInstructor() == null) {
-            throw new IllegalArgumentException("Cada clase debe tener un instructor asignado.");
-        }
-        // Aquí va la lógica para guardar la clase (repository.save(clase), por ejemplo)
-        claseRepository.save(clase);
+    public List<Clase> findAll() {
+        return claseRepository.findAll();
     }
+
+    public Clase saveClase(Clase clase) {
+        return claseRepository.save(clase);
+    }
+
     public void deleteClase(Clase clase) {
         claseRepository.delete(clase);
     }
 
-    public List<Clase> findAll() {
-        return claseRepository.findAll();
+    // Método para reducir la capacidad de la clase
+    public void reducirCapacidad(Clase clase) {
+        if (clase.getCapacidad() > 0) {
+            clase.setCapacidad(clase.getCapacidad() - 1);
+            saveClase(clase); // Guarda la clase con la nueva capacidad
+        } else {
+            throw new IllegalStateException("No hay capacidad disponible en esta clase.");
+        }
     }
 }
