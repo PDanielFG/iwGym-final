@@ -17,11 +17,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import es.uca.iw.fullstackwebapp.user.domain.User;
 import com.vaadin.flow.component.notification.Notification;
-
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 
 public class ClaseForm extends FormLayout {
@@ -41,6 +39,10 @@ public class ClaseForm extends FormLayout {
     public ClaseForm() {
         addClassName("admin-view");
         binder.bindInstanceFields(this);
+
+        // Configurar el ComboBox para que no sea editable
+        instructor.setAllowCustomValue(false);
+
         add(name, description, horario, capacidad, instructor, createButtonsLayout());
     }
 
