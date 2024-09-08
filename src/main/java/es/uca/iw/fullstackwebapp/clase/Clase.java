@@ -79,4 +79,8 @@ public class Clase {
     public void setInstructor(Instructor instructor) {
         this.instructor = instructor;
     }
+
+    public int getNumeroDeReservas() {
+        return reservas != null ? reservas.size() : 0;
+    }
 }

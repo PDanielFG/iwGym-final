@@ -25,6 +25,7 @@ import es.uca.iw.fullstackwebapp.user.services.UserManagementService;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.context.annotation.Scope;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -52,7 +53,8 @@ public class UserReservas extends VerticalLayout implements BeforeEnterObserver 
 
         // Configurar Grid
         grid.removeAllColumns();
-        grid.addColumn(Reserva::getFechaReserva).setHeader("Fecha de Reserva").setSortable(true);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        grid.addColumn(reserva -> reserva.getClase().getHorario().format(formatter)).setHeader("Horario").setSortable(true);
         grid.addColumn(reserva -> reserva.getClase().getName()).setHeader("Clase").setSortable(true);
         grid.addColumn(reserva -> {
             Clase clase = reserva.getClase();
