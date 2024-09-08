@@ -38,19 +38,17 @@ public class UserReservas extends VerticalLayout implements BeforeEnterObserver 
     private UUID id;
     private final ReservaService reservaService;
     private final UserManagementService userService;
-    private final EmailService emailService;
-
     private Grid<Reserva> grid = new Grid<>(Reserva.class);
     private Button saveButton = new Button("Guardar Cambios");
     private Binder<Reserva> binder = new BeanValidationBinder<>(Reserva.class);
     private Reserva selectedReserva;
 
-    public UserReservas(ReservaService reservaService, AuthenticatedUser authenticatedUser, UserManagementService userService, EmailService emailService) {
+    public UserReservas(ReservaService reservaService, AuthenticatedUser authenticatedUser, UserManagementService userService) {
         this.reservaService = reservaService;
         this.userService = userService;
-        this.emailService = emailService;
 
         addClassName("admin-view");
+        setSizeFull(); // Ocupa toda la altura disponible
 
         // Configurar Grid
         grid.removeAllColumns();
@@ -85,9 +83,13 @@ public class UserReservas extends VerticalLayout implements BeforeEnterObserver 
         HorizontalLayout buttonLayout = new HorizontalLayout(saveButton);
         buttonLayout.setJustifyContentMode(JustifyContentMode.CENTER);
         buttonLayout.setWidthFull();
+        buttonLayout.setPadding(true); // Añade un poco de espacio alrededor del botón
 
         // Agregar componentes al diseño
-        add(grid, buttonLayout);
+        add(grid);
+        add(buttonLayout); // Añadir el botón al final
+        setFlexGrow(1, grid); // Permitir que el grid crezca para ocupar el espacio disponible
+        setAlignSelf(Alignment.END, buttonLayout); // Alinear el botón al final
 
         // Configuración del Grid y el Editor
         grid.getEditor().setBuffered(true);
@@ -108,10 +110,7 @@ public class UserReservas extends VerticalLayout implements BeforeEnterObserver 
                 EstadoReserva estadoReserva = selectedReserva.getEstado();
                 Clase clase = selectedReserva.getClase();
 
-                // Enviar correo
-                emailService.modStatusReservationMail(usuario, estadoReserva, clase);
-
-                Notification.show("Cambios guardados y notificación vía email enviada.", 3000, Notification.Position.MIDDLE);
+                Notification.show("Cambios guardados.", 3000, Notification.Position.MIDDLE);
                 grid.getEditor().cancel(); // Cancelar el editor después de guardar
                 selectedReserva = null; // Limpiar la selección
             } catch (Exception e) {

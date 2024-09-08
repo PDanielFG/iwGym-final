@@ -45,6 +45,7 @@ public class ReservasDeClaseView extends VerticalLayout implements BeforeEnterOb
         this.reservaService = reservaService;
 
         addClassName("admin-view");
+        setSizeFull(); // Ocupa toda la altura disponible
 
         // Configurar Grid
         grid.removeAllColumns();
@@ -79,9 +80,13 @@ public class ReservasDeClaseView extends VerticalLayout implements BeforeEnterOb
         HorizontalLayout buttonLayout = new HorizontalLayout(saveButton);
         buttonLayout.setJustifyContentMode(JustifyContentMode.CENTER);
         buttonLayout.setWidthFull();
+        buttonLayout.setPadding(true); // Añadir espacio alrededor del botón
 
         // Agregar componentes al diseño
-        add(grid, buttonLayout);
+        add(grid);
+        add(buttonLayout); // Añadir el botón al final
+        setFlexGrow(1, grid); // Permitir que el grid crezca para ocupar el espacio disponible
+        setAlignSelf(Alignment.END, buttonLayout); // Alinear el botón al final
 
         // Configuración del Grid y el Editor
         grid.getEditor().setBuffered(true);
@@ -97,12 +102,7 @@ public class ReservasDeClaseView extends VerticalLayout implements BeforeEnterOb
                 binder.writeBean(selectedReserva); // Escribir el valor en el bean
                 reservaService.save(selectedReserva);
 
-                // Obtener el usuario y la clase para enviar el correo
-                User usuario = selectedReserva.getUsuario();
-                EstadoReserva estadoReserva = selectedReserva.getEstado();
-                Clase clase = selectedReserva.getClase();
-
-                Notification.show("Cambios guardados y notificación vía email enviada.", 3000, Notification.Position.MIDDLE);
+                Notification.show("Cambios guardados.", 3000, Notification.Position.MIDDLE);
                 grid.getEditor().cancel(); // Cancelar el editor después de guardar
                 selectedReserva = null; // Limpiar la selección
             } catch (Exception e) {
