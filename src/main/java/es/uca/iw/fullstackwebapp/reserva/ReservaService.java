@@ -73,4 +73,8 @@ public class ReservaService {
     public List<Reserva> findReservasByClaseId(Long claseId) {
         return reservaRepository.findByClaseId(claseId);
     }
+
+    public Object countReservasByClaseId(Long id) {
+        return reservaRepository.countReservasByClaseId(id);
+    }
 }

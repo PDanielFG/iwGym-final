@@ -14,6 +14,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import es.uca.iw.fullstackwebapp.MainLayout;
 import es.uca.iw.fullstackwebapp.clase.Clase;
 import es.uca.iw.fullstackwebapp.clase.ClaseService;
+import es.uca.iw.fullstackwebapp.reserva.ReservaService;
 import es.uca.iw.fullstackwebapp.user.security.AuthenticatedUser;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
@@ -30,17 +31,20 @@ import java.util.stream.Collectors;
 @PermitAll
 @Route(value = "reservasDeUnaClase", layout = MainLayout.class)
 @RolesAllowed("ADMIN")
-@PageTitle("Clases que han sido reservadas por algun usuario")
+@PageTitle("Clases que han sido reservadas por algún usuario")
 public class ReservasDeUnaClase extends VerticalLayout {
+
     Grid<Clase> grid = new Grid<>(Clase.class);
     TextField filterText = new TextField();
 
     private ClaseService claseService;
+    private ReservaService reservaService; // Añadido
     private AuthenticatedUser authenticatedUser;
 
     @Autowired
-    public ReservasDeUnaClase(ClaseService claseService, AuthenticatedUser authenticatedUser) {
+    public ReservasDeUnaClase(ClaseService claseService, ReservaService reservaService, AuthenticatedUser authenticatedUser) {
         this.claseService = claseService;
+        this.reservaService = reservaService; // Inicializado
         this.authenticatedUser = authenticatedUser;
         addClassName("admin-view");
         setSizeFull();
@@ -65,7 +69,10 @@ public class ReservasDeUnaClase extends VerticalLayout {
                 return "";
             }
         }).setHeader("Horario").setSortable(true);
-        grid.addColumn(Clase::getCapacidad).setHeader("Capacidad").setSortable(true);
+
+        // Añadido: Columna para mostrar la cantidad de reservas
+        grid.addColumn(clase -> reservaService.countReservasByClaseId(clase.getId()))
+                .setHeader("Número de Reservas").setSortable(true);
 
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
@@ -108,3 +115,4 @@ public class ReservasDeUnaClase extends VerticalLayout {
         grid.setItems(clasesFiltradas);
     }
 }
+
