@@ -1,6 +1,8 @@
 package es.uca.iw.fullstackwebapp.user.views;
 
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H6;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.button.Button;
@@ -43,7 +45,7 @@ public class UserLoginView extends VerticalLayout implements BeforeEnterObserver
         loginLayout.setSizeUndefined();
 
         // Añadir el diseño del formulario al diseño principal
-        add(loginLayout);
+        add(new H1("IwGymUca"), new H6("Bienvenido"), loginLayout);
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
         setSizeFull();

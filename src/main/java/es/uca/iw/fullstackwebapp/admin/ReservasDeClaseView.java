@@ -2,6 +2,7 @@ package es.uca.iw.fullstackwebapp.admin;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -30,9 +31,9 @@ import java.util.Optional;
 
 @SpringComponent
 @Scope("prototype")
-@RolesAllowed("ADMIN")
 @Route(value = "reservasClase/:claseId", layout = MainLayout.class)
-@PageTitle("Reservas de Clase. Admin.")
+@RolesAllowed("ADMIN")
+@PageTitle("Usuarios que han reservado la clase")
 public class ReservasDeClaseView extends VerticalLayout implements BeforeEnterObserver {
     private Long claseId;
     private final ReservaService reservaService;

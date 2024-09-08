@@ -35,7 +35,7 @@ public class DatabasePopulator implements CommandLineRunner {
             User user2 = new User();
             user2.setUsername("pepito");
             user2.setPassword("123");
-            user2.setEmail("admin@uca.es");
+            user2.setEmail("pepito@prueba.es");
             user2.addRole(Role.USER);
             userService.registerUser(user2);
             userService.activateUser(user2.getEmail(), user2.getRegisterCode());

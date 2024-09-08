@@ -16,6 +16,7 @@ import es.uca.iw.fullstackwebapp.clase.Clase;
 import es.uca.iw.fullstackwebapp.clase.ClaseService;
 import es.uca.iw.fullstackwebapp.user.security.AuthenticatedUser;
 import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import com.vaadin.flow.component.textfield.TextField;
@@ -28,7 +29,8 @@ import java.util.stream.Collectors;
 @Scope("prototype")
 @PermitAll
 @Route(value = "reservasDeUnaClase", layout = MainLayout.class)
-@PageTitle("Mis Reservas")
+@RolesAllowed("ADMIN")
+@PageTitle("Clases que han sido reservadas por algun usuario")
 public class ReservasDeUnaClase extends VerticalLayout {
     Grid<Clase> grid = new Grid<>(Clase.class);
     TextField filterText = new TextField();
@@ -40,7 +42,7 @@ public class ReservasDeUnaClase extends VerticalLayout {
     public ReservasDeUnaClase(ClaseService claseService, AuthenticatedUser authenticatedUser) {
         this.claseService = claseService;
         this.authenticatedUser = authenticatedUser;
-        addClassName("list-view");
+        addClassName("admin-view");
         setSizeFull();
         configureGrid();
 
