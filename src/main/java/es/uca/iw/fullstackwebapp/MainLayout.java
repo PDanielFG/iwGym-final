@@ -16,6 +16,7 @@ import com.vaadin.flow.server.auth.AccessAnnotationChecker;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import es.uca.iw.fullstackwebapp.admin.ClasesAdmin;
 import es.uca.iw.fullstackwebapp.admin.InstructoresAdmin;
+import es.uca.iw.fullstackwebapp.admin.ReservasDeUnaClase;
 import es.uca.iw.fullstackwebapp.user.domain.User;
 import es.uca.iw.fullstackwebapp.user.security.AuthenticatedUser;
 import es.uca.iw.fullstackwebapp.user.views.ClasesListView;
@@ -92,6 +93,9 @@ public class MainLayout extends AppLayout {
         }
         if (maybeUser.isPresent() && accessChecker.hasAccess(ReservaAdmin.class)) {
             nav.addItem(new SideNavItem("ADMIN. Reservas", ReservaAdmin.class, LineAwesomeIcon.USER_SHIELD_SOLID.create()));
+        }
+        if (maybeUser.isPresent() && accessChecker.hasAccess(ReservasDeUnaClase.class)) {
+            nav.addItem(new SideNavItem("ADMIN. Reservas de una clase", ReservasDeUnaClase.class, LineAwesomeIcon.USER_SHIELD_SOLID.create()));
         }
 
         return nav;
