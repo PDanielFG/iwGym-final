@@ -32,13 +32,10 @@ public class EmailRealService implements EmailService {
         this.mailSender = mailSender;
     }
 
-    private String getServerUrl() {
-        // Generate the server URL
-        String serverUrl = "http://";
-        serverUrl += InetAddress.getLoopbackAddress().getHostAddress();
-        serverUrl += ":" + serverPort + "/";
-        return serverUrl;
+    public String getServerUrl() {
+        return "http://iwsept-env.eba-ecvzp6qi.us-east-1.elasticbeanstalk.com/";
     }
+
 
     public boolean sendRegistrationEmail(User user) {
         MimeMessage message = mailSender.createMimeMessage();
