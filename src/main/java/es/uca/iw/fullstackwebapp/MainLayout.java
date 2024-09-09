@@ -97,7 +97,7 @@ public class MainLayout extends AppLayout {
         if (maybeUser.isPresent() && accessChecker.hasAccess(ReservasDeUnaClase.class)) {
             nav.addItem(new SideNavItem("ADMIN. Reservas de una clase", ReservasDeUnaClase.class, LineAwesomeIcon.USER_SHIELD_SOLID.create()));
         }
-
+ 
         return nav;
     }
 
