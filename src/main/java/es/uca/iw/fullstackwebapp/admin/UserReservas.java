@@ -39,14 +39,18 @@ public class UserReservas extends VerticalLayout implements BeforeEnterObserver 
     private UUID id;
     private final ReservaService reservaService;
     private final UserManagementService userService;
+
+    private final EmailService emailService;
+
     private Grid<Reserva> grid = new Grid<>(Reserva.class);
     private Button saveButton = new Button("Guardar Cambios");
     private Binder<Reserva> binder = new BeanValidationBinder<>(Reserva.class);
     private Reserva selectedReserva;
 
-    public UserReservas(ReservaService reservaService, AuthenticatedUser authenticatedUser, UserManagementService userService) {
+    public UserReservas(ReservaService reservaService, AuthenticatedUser authenticatedUser, UserManagementService userService, EmailService emailService) {
         this.reservaService = reservaService;
         this.userService = userService;
+        this.emailService = emailService;
 
         addClassName("admin-view");
         setSizeFull(); // Ocupa toda la altura disponible
@@ -111,6 +115,7 @@ public class UserReservas extends VerticalLayout implements BeforeEnterObserver 
                 User usuario = selectedReserva.getUsuario();
                 EstadoReserva estadoReserva = selectedReserva.getEstado();
                 Clase clase = selectedReserva.getClase();
+                emailService.modStatusReservationMail(usuario, estadoReserva, clase);
 
                 Notification.show("Cambios guardados.", 3000, Notification.Position.MIDDLE);
                 grid.getEditor().cancel(); // Cancelar el editor después de guardar

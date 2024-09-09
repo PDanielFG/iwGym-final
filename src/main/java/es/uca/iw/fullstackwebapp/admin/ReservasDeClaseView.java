@@ -2,7 +2,6 @@ package es.uca.iw.fullstackwebapp.admin;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -38,19 +37,24 @@ import java.util.Optional;
 public class ReservasDeClaseView extends VerticalLayout implements BeforeEnterObserver {
     private Long claseId;
     private final ReservaService reservaService;
+    private final EmailService emailService;
+
     private Grid<Reserva> grid = new Grid<>(Reserva.class);
     private Button saveButton = new Button("Guardar Cambios");
     private Binder<Reserva> binder = new BeanValidationBinder<>(Reserva.class);
     private Reserva selectedReserva;
 
-    public ReservasDeClaseView(ReservaService reservaService, AuthenticatedUser authenticatedUser, UserManagementService userService) {
+    public ReservasDeClaseView(ReservaService reservaService, AuthenticatedUser authenticatedUser, UserManagementService userService, EmailService emailService) {
         this.reservaService = reservaService;
+        this.emailService = emailService;
 
         addClassName("admin-view");
         setSizeFull(); // Ocupa toda la altura disponible
 
         // Configurar Grid
         grid.removeAllColumns();
+        grid.addColumn(reserva -> reserva.getUsuario().getUsername()).setHeader("Usuario").setSortable(true);
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         grid.addColumn(reserva -> reserva.getClase().getHorario().format(formatter)).setHeader("Horario").setSortable(true);
         grid.addColumn(reserva -> reserva.getClase().getName()).setHeader("Clase").setSortable(true);
@@ -60,7 +64,6 @@ public class ReservasDeClaseView extends VerticalLayout implements BeforeEnterOb
                     ? clase.getInstructor().getName() + " " + clase.getInstructor().getApellidos()
                     : "";
         }).setHeader("Instructor").setSortable(true);
-        grid.addColumn(reserva -> reserva.getUsuario().getUsername()).setHeader("Usuario").setSortable(true);
 
         // Configuración del ComboBox para el estado
         ComboBox<EstadoReserva> estadoComboBox = new ComboBox<>();
@@ -105,7 +108,16 @@ public class ReservasDeClaseView extends VerticalLayout implements BeforeEnterOb
                 binder.writeBean(selectedReserva); // Escribir el valor en el bean
                 reservaService.save(selectedReserva);
 
-                Notification.show("Cambios guardados.", 3000, Notification.Position.MIDDLE);
+                // Obtener el usuario y la clase para enviar el correo
+                User usuario = selectedReserva.getUsuario();
+                EstadoReserva estadoReserva = selectedReserva.getEstado();
+                Clase clase = selectedReserva.getClase();
+
+                // Enviar correo
+                //Se me habia olvidado esta linea y no me lo mandaba, CUIDADO
+                emailService.modStatusReservationMail(usuario, estadoReserva, clase);
+
+                Notification.show("Cambios guardados y notificación vía email enviada.", 3000, Notification.Position.MIDDLE);
                 grid.getEditor().cancel(); // Cancelar el editor después de guardar
                 selectedReserva = null; // Limpiar la selección
             } catch (Exception e) {
