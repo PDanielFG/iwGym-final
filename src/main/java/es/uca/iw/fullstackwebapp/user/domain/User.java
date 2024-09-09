@@ -18,7 +18,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "user")
+@Table(name = "user_app")
 public class User implements UserDetails {
 
     @Id
