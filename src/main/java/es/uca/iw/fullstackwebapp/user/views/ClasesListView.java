@@ -59,33 +59,54 @@ public class ClasesListView extends VerticalLayout {
     private void configureGrid() {
         grid.removeAllColumns();
         grid.addClassNames("clase-grid");
-        grid.setSizeFull();
+        grid.setSizeFull(); // Importante para que el grid ocupe todo el espacio disponible
 
-        grid.addColumn(Clase::getName).setHeader("Nombre").setSortable(true);
-        grid.addColumn(Clase::getDescription).setHeader("Descripción").setSortable(true);
+        // Configuración de columnas con flexibilidad equitativa
+        grid.addColumn(Clase::getName)
+                .setHeader("Nombre")
+                .setSortable(true)
+                .setFlexGrow(1); // Misma flexibilidad para todas las columnas
+
+        grid.addColumn(Clase::getDescription)
+                .setHeader("Descripción")
+                .setSortable(true)
+                .setFlexGrow(1); // Misma flexibilidad
+
         grid.addColumn(clase -> {
-            if (clase.getHorario() != null) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-                return clase.getHorario().format(formatter);
-            } else {
-                return "";
-            }
-        }).setHeader("Horario").setSortable(true);
-        grid.addColumn(Clase::getCapacidad).setHeader("Capacidad").setSortable(true);
+                    if (clase.getHorario() != null) {
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+                        return clase.getHorario().format(formatter);
+                    } else {
+                        return "";
+                    }
+                }).setHeader("Horario")
+                .setSortable(true)
+                .setFlexGrow(1); // Misma flexibilidad
+
+        grid.addColumn(Clase::getCapacidad)
+                .setHeader("Capacidad")
+                .setSortable(true)
+                .setFlexGrow(1); // Misma flexibilidad
 
         grid.addColumn(clase -> {
-            Instructor instructor = clase.getInstructor();
-            return instructor != null ? instructor.getName() + " " + instructor.getApellidos() : "";
-        }).setHeader("Instructor").setSortable(true);
+                    Instructor instructor = clase.getInstructor();
+                    return instructor != null ? instructor.getName() + " " + instructor.getApellidos() : "";
+                }).setHeader("Instructor")
+                .setSortable(true)
+                .setFlexGrow(1); // Misma flexibilidad
 
+        // Columna de acciones (puedes optar por no darle flexibilidad si no quieres que crezca)
         grid.addComponentColumn(clase -> {
-            Button reserveButton = new Button("Reservar");
-            reserveButton.addClickListener(click -> reservarClase(clase));
-            return reserveButton;
-        }).setHeader("Acciones");
+                    Button reserveButton = new Button("Reservar");
+                    reserveButton.addClickListener(click -> reservarClase(clase));
+                    return reserveButton;
+                }).setHeader("Acciones")
+                .setFlexGrow(1); // Misma flexibilidad
 
-        grid.getColumns().forEach(col -> col.setAutoWidth(true));
+        // Asegurarse de que el autoajuste de ancho está activado para que se respete el tamaño disponible
+        grid.getColumns().forEach(col -> col.setAutoWidth(false)); // Desactiva el autoancho si lo tenías activado
     }
+
 
     private Component getToolbar() {
         filterText.setPlaceholder("Filtrar por nombre o descripción...");
